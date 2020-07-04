@@ -1,0 +1,12 @@
+.accordeon_dashboard{
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+.separated_borders{
+  padding: 10px;
+}
+
+.separated_borders_accordeon{
+  padding: 15px 0px;
+}

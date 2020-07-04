@@ -1,0 +1,17 @@
+.div_number{
+  background-color: rgb(42, 98, 198);
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+}
+
+.subrayado{
+  border-bottom: 1px solid lightgray;
+}
+
+.div_bodega_parking{
+  max-height: 80px;
+  height: 80px;
+  overflow-y: auto;
+}

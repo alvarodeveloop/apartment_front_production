@@ -1,0 +1,21 @@
+.header_th_classs{
+  background-color: rgb(57, 44, 158);
+  color: white;
+  text-align: center;
+}
+
+.th_class{
+  background-color: rgb(12, 189, 109);
+  color: white;
+  text-align: center;
+}
+
+.tr_principal{
+  background-color: lightgray;
+  color: black;
+}
+
+.title_font{
+  background-color: rgb(1, 63, 201);
+  color: white;
+}
