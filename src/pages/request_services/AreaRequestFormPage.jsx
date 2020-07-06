@@ -75,7 +75,7 @@ const AreaRequestFormPage = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-    
+
     fetchData()
     removeAllFailuresByIp()
     inputRef.current.focus()
@@ -133,6 +133,7 @@ const AreaRequestFormPage = (props) => {
       axios.get(API_URL+'params_manage_problems_tipology_by_type/'+1),
       axios.get(API_URL+'params_manage_problems_point_failures'),
       axios.get(API_URL+'params_manage_problems_related_failures'),
+      axios.get(API_URL+'master_config_ss'),
     ]
 
     if(props.match.params.id){
@@ -142,17 +143,24 @@ const AreaRequestFormPage = (props) => {
     }
 
     Promise.all(promises).then(result => {
+      if(result[8].data){
+        setClientData(result[0].data)
+        setBlocks(result[1].data)
+        setHousingComplexes(result[2].data)
+        setOrigins(result[3].data)
+        setPrecints(result[4].data)
+        setTipologyFailures(result[5].data)
+        setPointFailures(result[6].data)
+        setRelatedFailures(result[7].data)
+        if(props.match.params.id){
+          setFailureData(result[9].data)
+        }
+      }else{
+        NotificationManager.error('Debe hacer la configuración de las s.s primero')
+        setTimeout(function () {
+          props.history.replace('/masters/config')
+        }, 1000);
 
-      setClientData(result[0].data)
-      setBlocks(result[1].data)
-      setHousingComplexes(result[2].data)
-      setOrigins(result[3].data)
-      setPrecints(result[4].data)
-      setTipologyFailures(result[5].data)
-      setPointFailures(result[6].data)
-      setRelatedFailures(result[7].data)
-      if(props.match.params.id){
-        setFailureData(result[8].data)
       }
 
     }).catch(err => {

@@ -20,14 +20,14 @@ import ConfigCustomizeSystem from 'components/config/ConfigCustomizeSystem'
 const ConfigPage = (props) => {
 
   useEffect(() => {
-    
+
   },[])
 
   return (
     <Container fluid={true}>
       <Row className="containerDiv">
         <Col sm={12} md={12} lg={12} xs={12}>
-          <Tabs defaultActiveKey="config_ss" id="uncontrolled-tab-example">
+          <Tabs defaultActiveKey="config_ss" id="uncontrolled-tab-example" variant="pills">
             <Tab eventKey="config_ss" title="Datos S.S">
               <ConfigSSComponent {...props} />
             </Tab>

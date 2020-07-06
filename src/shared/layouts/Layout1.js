@@ -29,7 +29,7 @@ const Layout1  = props => {
           <LayoutSidenav {...props} />
 
           <div className="layout-content">
-            <div className="container-fluid flex-grow-1 container-p-y">
+            <div className="container-fluid flex-grow-1 container-p-y" style={{backgroundColor: 'white'}}>
               {props.children}
             </div>
 
