@@ -1,0 +1,1 @@
+{"version":3,"sources":["dashboard.css"],"names":[],"mappings":"AAAA,qBACE,eAAgB,CAChB,gBACF,CAEA,mBACE,YACF,CAEA,6BACE,cACF","file":"24.5735743e.chunk.css","sourcesContent":[".accordeon_dashboard{\r\n  overflow-y: auto;\r\n  max-height: 500px;\r\n}\r\n\r\n.separated_borders{\r\n  padding: 10px;\r\n}\r\n\r\n.separated_borders_accordeon{\r\n  padding: 15px 0px;\r\n}\r\n"]}
