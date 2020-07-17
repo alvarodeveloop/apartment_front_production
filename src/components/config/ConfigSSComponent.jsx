@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import {
   Container,
   Row,
@@ -10,9 +11,10 @@ import {
 import {
   IoIosSend
 } from 'react-icons/io'
+import { setConfig } from 'actions/configs'
 import InputField from 'components/input/InputComponent'
 import { API_URL } from '../../utils/constants'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import axios from 'axios'
 
 const ConfigSSComponent = (props) => {
@@ -64,10 +66,10 @@ const ConfigSSComponent = (props) => {
       }
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err,'aqui =========');
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -88,10 +90,10 @@ const ConfigSSComponent = (props) => {
       setTypeService(result[3].data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err,'aqui =========');
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
 
@@ -111,24 +113,26 @@ const ConfigSSComponent = (props) => {
 
     if(objectPost.id){
       axios.put(API_URL+'master_config_ss/'+objectPost.id,objectPost).then(result => {
-        NotificationManager.success('Registro Modificado')
+        toast.success('Registro Modificado')
         fetchData()
+        props.setConfig(result.data)
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'master_config_ss',objectPost).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         fetchData()
+        props.setConfig(result.data)
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }
@@ -383,7 +387,12 @@ ConfigSSComponent.defaultProps = {
       'Requerido*'
     ],
   },
-
 }
 
-export default ConfigSSComponent
+function mapDispatchToProps(){
+    return {
+      setConfig,
+    }
+}
+
+export default connect(null,mapDispatchToProps())(ConfigSSComponent)

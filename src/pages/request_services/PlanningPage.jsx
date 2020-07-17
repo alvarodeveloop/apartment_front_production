@@ -6,8 +6,6 @@ import {
   Col,
   Button,
   Form,
-  Card,
-  Accordion,
   Modal,
   Tabs,
   Tab
@@ -20,7 +18,7 @@ import {
   MdPlaylistAdd
 } from 'react-icons/md'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import axios from 'axios'
 import Table from 'components/Table'
 import * as moment from 'moment-timezone'
@@ -47,9 +45,9 @@ const PlanningPage = (props) => {
       setTaskOwnership(result[0].data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

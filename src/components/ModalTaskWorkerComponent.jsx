@@ -11,7 +11,7 @@ import {
 import {
   FaTasks
 } from 'react-icons/fa'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 import { API_URL } from 'utils/constants'
 import axios from 'axios'
 import InputField from 'components/input/InputComponent'
@@ -49,16 +49,16 @@ const ModalTaskWorkerComponent = (props) => {
 
     let objectPost = Object.assign({},data)
     if(objectPost.assigned_to === ""){
-      NotificationManager.error('Debe elegir a que tipo de Invididuo se le asignará la tarea')
+      toast.error('Debe elegir a que tipo de Invididuo se le asignará la tarea')
       return
     }
 
     props.submit(objectPost).then(result => {
-      NotificationManager.success('Tarea Agregada')
+      toast.success('Tarea Agregada')
       clearForm()
       props.onHide()
     }).catch(err => {
-      NotificationManager.error(err)
+      toast.error(err)
     })
   }
 
@@ -85,9 +85,9 @@ const ModalTaskWorkerComponent = (props) => {
       }
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

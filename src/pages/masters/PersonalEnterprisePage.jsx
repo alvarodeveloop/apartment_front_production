@@ -16,7 +16,7 @@ import Table from 'components/Table'
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import axios from 'axios'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import { API_URL } from 'utils/constants'
 let personal_columns = []
 
@@ -81,13 +81,13 @@ const PersonalEnterprisePage = (props) => {
 
   const confirmDeleteRegister = id => {
     axios.delete(API_URL+'personal_enterprise/'+id).then(result => {
-      NotificationManager.success('Registro Eliminado')
+      toast.success('Registro Eliminado')
       fetchData()
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -119,9 +119,9 @@ const PersonalEnterprisePage = (props) => {
       setData(result.data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

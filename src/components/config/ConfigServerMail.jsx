@@ -12,7 +12,7 @@ import {
 } from 'react-icons/io'
 import InputField from 'components/input/InputComponent'
 import { API_URL } from '../../utils/constants'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import axios from 'axios'
 
 const ConfigServerMail = (props) => {
@@ -49,9 +49,9 @@ const ConfigServerMail = (props) => {
       }
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -70,24 +70,24 @@ const ConfigServerMail = (props) => {
 
     if(objectPost.id){
       axios.put(API_URL+'master_config_server_mail/'+objectPost.id,objectPost).then(result => {
-        NotificationManager.success('Registro Modificado')
+        toast.success('Registro Modificado')
         fetchData()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'master_config_server_mail',objectPost).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         fetchData()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }

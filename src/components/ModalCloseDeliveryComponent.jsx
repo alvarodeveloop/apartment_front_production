@@ -11,12 +11,12 @@ import {
 import {
   MdNotInterested
 } from 'react-icons/md'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 import { API_URL } from 'utils/constants'
 import axios from 'axios'
 import InputFieldRef from 'components/input/InputComponentRef'
 
-const ModalAnulateDeliveryComponent = (props) => {
+const ModalCloseDeliveryComponent = (props) => {
 
   const [data, setData] = useState({
     date_close: ''
@@ -47,11 +47,11 @@ const ModalAnulateDeliveryComponent = (props) => {
     let objectPost = Object.assign({},data)
 
     props.submit(objectPost).then(result => {
-      NotificationManager.success('Entrega Cerrada')
+      toast.success('Entrega Cerrada')
       clearForm()
       props.onHide()
     }).catch(err => {
-      NotificationManager.error(err)
+      toast.error(err)
     })
   }
 
@@ -129,11 +129,11 @@ const ModalAnulateDeliveryComponent = (props) => {
   )
 }
 
-ModalAnulateDeliveryComponent.propTypes = {
+ModalCloseDeliveryComponent.propTypes = {
   show: PropTypes.bool.isRequired,
   onHide: PropTypes.func.isRequired,
   submit: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired
 }
 
-export default ModalAnulateDeliveryComponent
+export default ModalCloseDeliveryComponent

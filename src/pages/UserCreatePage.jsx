@@ -12,7 +12,7 @@ import { connect } from 'react-redux'
 import { setMenu } from 'actions/menu'
 import InputField from 'components/input/InputComponent'
 import axios from 'axios'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 import { API_URL } from 'utils/constants'
 import 'styles/pages/users.css'
 let count = 0
@@ -63,7 +63,7 @@ const UserCreatePage  = props => {
         setIsUpdate(true)
       }
     }).catch(err => {
-      NotificationManager.error('Error, contacte con soporte')
+      toast.error('Error, contacte con soporte')
     })
   }
 
@@ -104,7 +104,7 @@ const UserCreatePage  = props => {
     if(modulesUser.length === 0){
       e.stopPropagation();
       setValidated(true);
-      NotificationManager.error('Debe escoger al menos un módulo para el usuario')
+      toast.error('Debe escoger al menos un módulo para el usuario')
       return
     }
 
@@ -114,33 +114,33 @@ const UserCreatePage  = props => {
 
     if(!isUpdate){
       if(!user.password){
-        NotificationManager.error('Debe escribir una contraseña')
+        toast.error('Debe escribir una contraseña')
         return false
       }
     }
 
     if(isUpdate){
       axios.put(API_URL+'user/'+props.match.params.id,user).then(result => {
-        NotificationManager.success('Usuario Modificado')
+        toast.success('Usuario Modificado')
         renderMenuNew(true)
       }).catch(err => {
         const { response } = err
         if(response){
-          NotificationManager.error(response.data.message)
+          toast.error(response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'user',user).then(result => {
-        NotificationManager.success('Usuario Registrado')
+        toast.success('Usuario Registrado')
         renderMenuNew(false)
       }).catch(err => {
         const { response } = err
         if(response){
-          NotificationManager.error(response.data.message)
+          toast.error(response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }
@@ -238,43 +238,46 @@ const UserCreatePage  = props => {
               </Row>
             )}
           </Col>
-          <Col sm={7} md={7} lg={7} xs={12} className="containerDivSeparated">
-            <h3 className="text-center font-title">Módulos</h3>
-            <Row>
-              {modules.map((v,i) => (
-                <Col sm={4} md={4} lg={4} xs={6} key={i}>
-                  <Form.Group>
-                    <label forHtml={v.name_item+v.id}>
-                      <input type="checkbox"
-                        id={v.name_item+v.id}
-                        value={v.id}
-                        checked={!!modulesUser.find(f => f == v.id)}
-                        onChange={(e) => handleAccess(e,v.id) }
-                      />
-                    <br/>
-                    {v.name_item}
-                    </label>
-                  </Form.Group>
-                </Col>
-              ))}
-            </Row>
-            <div className="fixedBottom">
+          {isUpdate && (userData.id_rol == 5 || userData.id_rol == 6) ? '' : (
+            <Col sm={7} md={7} lg={7} xs={12} className="containerDivSeparated">
+              <h3 className="text-center font-title">Módulos</h3>
               <Row>
-                <Col sm={6} md={6} lg={6} xs={12}>
-                  <Button variant="secondary" block={true} onClick={addAllModules}>Seleccionar Todos <FaCheckCircle /></Button>
-                </Col>
-                <Col sm={6} md={6} lg={6} xs={12}>
-                  <Button variant="secondary" block={true} onClick={removeAllModules}>Deseleccionar Todos <FaTrashAlt /></Button>
-                </Col>
+                {modules.map((v,i) => (
+                  <Col sm={4} md={4} lg={4} xs={6} key={i}>
+                    <Form.Group>
+                      <label forHtml={v.name_item+v.id}>
+                        <input type="checkbox"
+                          id={v.name_item+v.id}
+                          value={v.id}
+                          checked={!!modulesUser.find(f => f == v.id)}
+                          onChange={(e) => handleAccess(e,v.id) }
+                          />
+                        <br/>
+                        {v.name_item}
+                      </label>
+                    </Form.Group>
+                  </Col>
+                ))}
               </Row>
-              <Row className="justify-content-center">
-                <Col sm={12} md={12} lg={12}>
-                  <br/>
-                  <p>Hacer click en el botón enviar para guardar los cambios</p>
-                </Col>
-              </Row>
-            </div>
-          </Col>
+
+              <div className="fixedBottom">
+                <Row>
+                  <Col sm={6} md={6} lg={6} xs={12}>
+                    <Button variant="secondary" block={true} onClick={addAllModules}>Seleccionar Todos <FaCheckCircle /></Button>
+                  </Col>
+                  <Col sm={6} md={6} lg={6} xs={12}>
+                    <Button variant="secondary" block={true} onClick={removeAllModules}>Deseleccionar Todos <FaTrashAlt /></Button>
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
+                  <Col sm={12} md={12} lg={12}>
+                    <br/>
+                    <p>Hacer click en el botón enviar para guardar los cambios</p>
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          )}
         </Row>
     </Form>
     </Container>

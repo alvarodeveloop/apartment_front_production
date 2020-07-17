@@ -1,5 +1,6 @@
 import React, { useMemo, useState , useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import {
   Container,
   Row,
@@ -14,7 +15,7 @@ import InputField from 'components/input/InputComponent'
 import InputFieldRef from 'components/input/InputComponentRef'
 import axios from 'axios'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import {
   FaPlusCircle,
   FaTrash
@@ -68,11 +69,18 @@ const OwnershipFormPage = (props) => {
 
   useEffect(() => {
 
-    fetchData()
-    inputRef.current.focus()
+    if(props.config_ss && Object.keys(props.config_ss).length > 0){
+      fetchData()
+      inputRef.current.focus()
 
-    return () => {
-      is_lesee = false
+      return () => {
+        is_lesee = false
+      }
+    }else{
+      toast.error('Debe hacer su configuración primero')
+      setTimeout(function () {
+        props.history.replace('/masters/config')
+      }, 1000);
     }
 
   },[])
@@ -125,17 +133,18 @@ const OwnershipFormPage = (props) => {
           file: result[5].data.file,
           parkings: result[5].data.parkings.length > 0 ? result[5].data.parkings.filter(v => v.type == 2).map(v => v.name) : [],
           cellars: result[5].data.parkings.length > 0 ? result[5].data.parkings.filter(v => v.type == 1).map(v => v.name) : [],
-          user: '',
+          user: result[5].data.user,
           password: '',
           id: result[5].data.id
         })
+        setNameFile(result[5].data.file)
       }
 
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
 
@@ -184,24 +193,27 @@ const OwnershipFormPage = (props) => {
 
     if(objectPost.id){
       axios.put(API_URL+'masters_ownership/'+objectPost.id,newFormData).then(result => {
-        NotificationManager.success('Registro Modificado')
-        gotBackToTable()
+        toast.success('Registro Modificado')
+        clearForm()
+        setTimeout(function () {
+          gotBackToTable()
+        }, 1000);
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'masters_ownership',newFormData).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         clearForm()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }
@@ -292,7 +304,7 @@ const OwnershipFormPage = (props) => {
       if(val){
         setData({...data, parkings: [...data.parkings,val] })
       }else{
-        NotificationManager.error('El campo estacionamiento no puede estar vacio')
+        toast.error('El campo estacionamiento no puede estar vacio')
       }
     }else{
       let val = document.getElementById('name_celler').value
@@ -300,7 +312,7 @@ const OwnershipFormPage = (props) => {
       if(val){
         setData({...data, cellars: [...data.cellars,val] })
       }else{
-        NotificationManager.error('El campo bodega no puede estar vacio')
+        toast.error('El campo bodega no puede estar vacio')
       }
     }
 
@@ -319,20 +331,26 @@ const OwnershipFormPage = (props) => {
   }
 
   const onChangeFile = e => {
-    setDocumentUpload(e.target.files[0])
-    setNameFile(e.target.files[0].name)
+    if(props.config_ss.valid_format_documents.indexOf(e.target.files[0].type.split('/')[1]) !== -1){
+      setDocumentUpload(e.target.files[0])
+      setNameFile(e.target.files[0].name)
+    }else{
+      toast.error('El tipo de archivo no es valido')
+      document.getElementById('input_document').value = ""
+      document.getElementById('input_document').src = ""
+    }
   }
 
   const deleteFile = file => {
     axios.delete(API_URL+'masters_ownership_destroy_file/'+file+'/'+data.id).then(result => {
-      NotificationManager.success('Archivo eliminado')
+      toast.success('Archivo eliminado')
       setData({...data, file: ''})
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -647,7 +665,7 @@ const OwnershipFormPage = (props) => {
               />
               <InputField
                 type='password'
-                required={true}
+                required={props.match.params.id ? false : true}
                 name='password'
                 label='Clave Acceso (a sistema online):'
                 messageErrors={[
@@ -661,15 +679,15 @@ const OwnershipFormPage = (props) => {
             <Row>
               <Col sm={3} md={3} lg={3}>
                 <Button block={true} size="sm" variant="secondary" onClick={openFileInput}>Documento Propietario</Button>
-                <input type="file" id="input_document" style={{ display: 'none'}} onChange={onChangeFile} />
+                <input accept={props.config_ss ? props.config_ss.valid_format_documents : ''} type="file" id="input_document" style={{ display: 'none'}} onChange={onChangeFile} />
               </Col>
               <Col sm={4} md={4} lg={4}>
-                { nameFile }
+                { nameFile ? nameFile : '' }
               </Col>
             </Row>
             <Row>
               <Col sm={12} md={12} lg={12}>
-                {data.file ? (
+                {nameFile ? (
                   <React.Fragment>
                     <b>{data.file}</b>&nbsp;&nbsp;<Button size="sm" variant="danger" type="button" onClick={() => deleteFile(data.file)}><FaTrash /></Button>
                   </React.Fragment>
@@ -769,4 +787,10 @@ OwnershipFormPage.defaultProps = {
   },
 }
 
-export default OwnershipFormPage
+function mapStateToProps(state){
+  return {
+    config_ss : state.configs.config
+  }
+}
+
+export default connect(mapStateToProps,{})(OwnershipFormPage)

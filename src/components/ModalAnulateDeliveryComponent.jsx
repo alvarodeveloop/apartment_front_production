@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
+import { toast } from 'react-toastify'
+import { API_URL } from 'utils/constants'
+import axios from 'axios'
+import InputFieldRef from 'components/input/InputComponentRef'
 import {
   Container,
   Row,
@@ -11,10 +15,6 @@ import {
 import {
   FaBook
 } from 'react-icons/fa'
-import { NotificationManager } from 'react-notifications';
-import { API_URL } from 'utils/constants'
-import axios from 'axios'
-import InputFieldRef from 'components/input/InputComponentRef'
 
 const ModalAnulateDeliveryComponent = (props) => {
 
@@ -47,11 +47,11 @@ const ModalAnulateDeliveryComponent = (props) => {
     let objectPost = Object.assign({},data)
 
     props.submit(objectPost).then(result => {
-      NotificationManager.success('Entrega Anulada')
+      toast.success('Entrega Anulada')
       clearForm()
       props.onHide()
     }).catch(err => {
-      NotificationManager.error(err)
+      toast.error(err)
     })
   }
 

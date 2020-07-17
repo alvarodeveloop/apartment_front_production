@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import{
   Container,
   Row,
@@ -17,7 +18,7 @@ import {
 import 'styles/pages/requestPropertyForm.css'
 import InputFieldRef from 'components/input/InputComponentRef'
 import InputField from 'components/input/InputComponent'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import axios from 'axios'
 import { API_URL } from 'utils/constants'
 import Table from 'components/Table'
@@ -88,10 +89,16 @@ const ManagementDeliveryFormPage = (props) => {
   const [isOpenModalCloseDelivery,setIsOpenModalCloseDelivery] = useState(false)
 
   useEffect(() => {
-    
-    fetchData(true)
-    removeAllFailuresByIp()
-    inputRef.current.focus()
+    if(props.config_ss && Object.keys(props.config_ss).length > 0){
+      fetchData(true)
+      removeAllFailuresByIp()
+      inputRef.current.focus()
+    }else{
+      toast.error('Debe hacer su configuración primero')
+      setTimeout(function () {
+        props.history.replace('/masters/config')
+      }, 1000);
+    }
   },[])
 
   useMemo(() => {
@@ -139,9 +146,9 @@ const ManagementDeliveryFormPage = (props) => {
       console.log('registros borrados');
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
 
@@ -245,9 +252,9 @@ const ManagementDeliveryFormPage = (props) => {
 
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -255,12 +262,12 @@ const ManagementDeliveryFormPage = (props) => {
   const removeFailure = id => {
     axios.delete(API_URL+'delivery_failure/'+id).then(result => {
       getFailures()
-      NotificationManager.success('Falla eliminada')
+      toast.success('Falla eliminada')
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -274,9 +281,9 @@ const ManagementDeliveryFormPage = (props) => {
       setOwnerships(result.data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -319,7 +326,13 @@ const ManagementDeliveryFormPage = (props) => {
     }else if(e.target.name === "id_ownership"){
       displayOwnershipProperty(e.target.value)
     }else if(e.target.name === "input_file"){
-      setData({...data, file: e.target.files[0], name_file: e.target.files[0].name })
+      if(props.config_ss.valid_format_documents.indexOf(e.target.files[0].type.split('/')[1]) !== -1){
+        setData({...data, file: e.target.files[0], name_file: e.target.files[0].name })
+      }else{
+        toast.error('El tipo de archivo no es valido')
+        document.getElementById('input_file').value = ""
+        document.getElementById('input_file').src = ""
+      }
     }else{
       setData({...data, [e.target.name]: e.target.value})
 
@@ -328,27 +341,27 @@ const ManagementDeliveryFormPage = (props) => {
 
   const addFailure = () => {
     if(!data1.id_precint){
-      NotificationManager.error('Debe Agregar un recinto')
+      toast.error('Debe Agregar un recinto')
       return false
     }
 
     if(!data1.id_related_failure){
-      NotificationManager.error('Debe agregar una relación de falla')
+      toast.error('Debe agregar una relación de falla')
       return false
     }
 
     if(!data1.id_tipology_failure){
-      NotificationManager.error('Debe agregar una tipologia de falla')
+      toast.error('Debe agregar una tipologia de falla')
       return false
     }
 
     if(!data1.id_point_failure){
-      NotificationManager.error('Debe agregar una falla puntual')
+      toast.error('Debe agregar una falla puntual')
       return false
     }
 
     if(!data1.description){
-      NotificationManager.error('Debe agregar una descripción de la falla')
+      toast.error('Debe agregar una descripción de la falla')
       return false
     }
 
@@ -358,12 +371,12 @@ const ManagementDeliveryFormPage = (props) => {
     axios.post(API_URL+'delivery_failure',objectPost).then(result => {
       clearForm1()
       getFailures()
-      NotificationManager.success('Falla Agregada')
+      toast.success('Falla Agregada')
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -413,27 +426,27 @@ const ManagementDeliveryFormPage = (props) => {
 
     if(objectPost.id){
       axios.put(API_URL+'delivery/'+objectPost.id,formData).then(result => {
-        NotificationManager.success('Registro Modificado')
+        toast.success('Registro Modificado')
         fetchData()
         clearForm()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'delivery',formData).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         fetchData()
         clearForm()
         inputRef.current.focus()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }
@@ -486,7 +499,7 @@ const ManagementDeliveryFormPage = (props) => {
       if(val){
         setData({...data, parkings: [...data.parkings,val] })
       }else{
-        NotificationManager.error('El campo estacionamiento no puede estar vacio')
+        toast.error('El campo estacionamiento no puede estar vacio')
       }
     }else{
       let val = document.getElementById('name_celler').value
@@ -494,7 +507,7 @@ const ManagementDeliveryFormPage = (props) => {
       if(val){
         setData({...data, cellars: [...data.cellars,val] })
       }else{
-        NotificationManager.error('El campo bodega no puede estar vacio')
+        toast.error('El campo bodega no puede estar vacio')
       }
     }
   }
@@ -523,9 +536,9 @@ const ManagementDeliveryFormPage = (props) => {
         setFailureData(result.data)
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
 
@@ -534,9 +547,9 @@ const ManagementDeliveryFormPage = (props) => {
         setFailureData(result.data)
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }
@@ -548,10 +561,10 @@ const ManagementDeliveryFormPage = (props) => {
       setPointFailures(result.data)
     }).catch(err => {
      	 if(err.response){
-         NotificationManager.error(err.response.data.message)
+         toast.error(err.response.data.message)
        }else{
          console.log(err);
-         NotificationManager.error('Error,contacte con soporte')
+         toast.error('Error,contacte con soporte')
        }
     })
 
@@ -564,7 +577,7 @@ const ManagementDeliveryFormPage = (props) => {
   const cleanInput = () => {
     if(data.id && !data.file){
       axios.delete(API_URL+'delivery_delete_file/'+data.id).then(result => {
-        NotificationManager.success('Archivo Eliminado')
+        toast.success('Archivo Eliminado')
         setData( propsData => {
           return Object.assign({},data,{
             name_file: '',
@@ -572,9 +585,9 @@ const ManagementDeliveryFormPage = (props) => {
         })
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
@@ -660,10 +673,10 @@ const ManagementDeliveryFormPage = (props) => {
       FileSaver.saveAs(result.data,'acta_entrega.pdf')
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -675,10 +688,10 @@ const ManagementDeliveryFormPage = (props) => {
       FileSaver.saveAs(result.data,'observaciones.pdf')
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -1236,7 +1249,7 @@ const ManagementDeliveryFormPage = (props) => {
                     <Row>
                       <Col sm={4} md={4} lg={4}>
                         <Button variant="secondary" block={true} size="sm" type="button" onClick={openFileInput}>Seleccionar Adjunto</Button>
-                        <input type="file" name="input_file" id="input_file" style={{ display: 'none'}} onChange={onChange} />
+                        <input accept={props.config_ss ? props.config_ss.valid_format_documents : ''} type="file" name="input_file" id="input_file" style={{ display: 'none'}} onChange={onChange} />
                       </Col>
                       <Col sm={4} md={4} lg={4}>
                         { data.name_file ? (
@@ -1403,4 +1416,10 @@ const ManagementDeliveryFormPage = (props) => {
   )
 }
 
-export default ManagementDeliveryFormPage
+function mapStateToProps(state){
+  return {
+    config_ss : state.configs.config
+  }
+}
+
+export default connect(mapStateToProps,{})(ManagementDeliveryFormPage)

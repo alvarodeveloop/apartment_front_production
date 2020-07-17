@@ -12,7 +12,7 @@ import InputFieldRef from 'components/input/InputComponentRef'
 import axios from 'axios'
 import { API_URL } from 'utils/constants'
 import Table from 'components/Table'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import { formatNumber, s2ab } from 'utils/functions'
 import { saveAs } from 'file-saver'
 import * as xlsx from 'xlsx'
@@ -133,10 +133,10 @@ const OwnershipPage = (props) => {
 
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
 
@@ -155,9 +155,9 @@ const OwnershipPage = (props) => {
       setOwnerships(result.data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
 

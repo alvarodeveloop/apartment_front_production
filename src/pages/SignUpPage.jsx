@@ -8,7 +8,7 @@ import {
   Form
 } from 'react-bootstrap'
 import InputField from 'components/input/InputComponent'
-import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { ToastContainer, toast } from 'react-toastify';
 import { API_URL } from 'utils/constants'
 import axios from 'axios'
 
@@ -45,20 +45,20 @@ const SignUpPage = (props) => {
     let userSave = Object.assign({},user)
 
     if(userSave.password !== userSave.password_repeat){
-      NotificationManager.error('Las contraseñas no coinciden')
+      toast.error('Las contraseñas no coinciden')
       return false
     }
 
     axios.post(API_URL+'user_free',userSave).then(result => {
-      NotificationManager.success('Usuario Registrado')
+      toast.success('Usuario Registrado')
       setTimeout(() => {
         props.history.replace('/')
       },1500)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
 
@@ -124,7 +124,7 @@ const SignUpPage = (props) => {
           </Form>
         </Col>
       </Row>
-      <NotificationContainer/>
+      <ToastContainer/>
     </Container>
   )
 }

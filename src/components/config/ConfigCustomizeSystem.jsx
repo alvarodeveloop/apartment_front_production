@@ -17,7 +17,7 @@ import {
 
 import InputField from 'components/input/InputComponent'
 import { API_URL } from '../../utils/constants'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import axios from 'axios'
 
 const ConfigCustomizeSystem = (props) => {
@@ -77,10 +77,10 @@ const ConfigCustomizeSystem = (props) => {
       setValidated(false)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -99,7 +99,7 @@ const ConfigCustomizeSystem = (props) => {
 
     if(objectPost.id){
       axios.put(API_URL+'master_config_customize_system/'+objectPost.id,objectPost).then(result => {
-        NotificationManager.success('Registro Modificado')
+        toast.success('Registro Modificado')
 
         let promises = []
 
@@ -124,23 +124,23 @@ const ConfigCustomizeSystem = (props) => {
           fetchData()
         }).catch(err => {
           if(err.response){
-            NotificationManager.error(err.response.data.message)
+            toast.error(err.response.data.message)
           }else{
-            NotificationManager.error('Error, contacte con soporte')
+            toast.error('Error, contacte con soporte')
           }
         })
 
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
           console.log(err);
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'master_config_customize_system',objectPost).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         let promises = []
 
         if(logoFile){
@@ -164,18 +164,18 @@ const ConfigCustomizeSystem = (props) => {
           fetchData()
         }).catch(err => {
           if(err.response){
-            NotificationManager.error(err.response.data.message)
+            toast.error(err.response.data.message)
           }else{
-            NotificationManager.error('Error, contacte con soporte')
+            toast.error('Error, contacte con soporte')
           }
         })
 
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
           console.log(err);
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }

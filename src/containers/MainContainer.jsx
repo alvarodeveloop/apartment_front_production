@@ -2,15 +2,16 @@ import React,{ useState,useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import AuthPage from 'pages/AuthPage'
 import  'styles/AuthStyle.css'
 import { login,logout } from 'actions/auth'
+import { setOwnerships,cleanOwenerships } from 'actions/ownership'
 import { resetCart } from 'actions/cart'
 //import { MainLayout } from 'components/Layout'
 import Layout1 from 'shared/layouts/Layout1'
 import { setMenu, removeMenu } from 'actions/menu'
+import { setConfig, removeConfig } from 'actions/configs'
 import { API_URL } from 'utils/constants'
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { ToastContainer, toast } from 'react-toastify'
 import { setAuthorizationToken } from 'utils/functions'
 import axios from 'axios'
 
@@ -20,14 +21,29 @@ const MainContainer = props => {
       if(props.isLogin){
 
         if(props.menu.length === 0){
-          axios.get(API_URL+'menu_user').then(result => {
-            props.setMenu(result.data)
+          let promises = [
+            axios.get(API_URL+'menu_user'),
+            axios.get(API_URL+'master_config_ss'),
+          ]
+          if(props.userState.id_rol == 5){
+            promises.push(
+              axios.get(API_URL+'ownership_by_user'),
+            )
+          }
+
+          Promise.all(promises).then(result => {
+            props.setMenu(result[0].data)
+            props.setConfig(result[1].data)
+            if(props.userState.id_rol == 5){
+              props.setOwnerships(result[2].data)
+            }
           }).catch(err => {
             const { response } = err
             if(response){
-              NotificationManager.error(response.data.message,'Error')
+              toast.error(response.data.message,'Error')
             }else{
-              NotificationManager.error('No se pudo cargar el menú, contacte con soporte')
+              console.log(err);
+              toast.error('No se pudo cargar el menú, contacte con soporte')
             }
           })
         }
@@ -37,6 +53,8 @@ const MainContainer = props => {
         localStorage.removeItem('token')
         setAuthorizationToken(null);
         props.removeMenu()
+        props.removeConfig()
+        props.cleanOwenerships()
       }
 
     },[props.isLogin])
@@ -46,12 +64,14 @@ const MainContainer = props => {
       localStorage.removeItem('token')
       setAuthorizationToken(null);
       props.removeMenu()
+      props.removeConfig()
       props.logout()
+      props.cleanOwenerships()
     }
 
     const logoutUserByTokenExpired = err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
         if(err.status === 400){
           setTimeout(() => {
             handleLogoutUser()
@@ -59,17 +79,17 @@ const MainContainer = props => {
         }
       }else{
         console.log(err);
-        NotificationManager.error('Error contacte con soporte')
+        toast.error('Error contacte con soporte')
       }
     }
 
     if(props.isLogin){
 
       return(
-        <Layout1 {...props} menuUser={props.menu} logoutUser={handleLogoutUser} logoutByToken={logoutUserByTokenExpired}>
-          {props.children}
-          <NotificationContainer />
-        </Layout1>
+          <Layout1 {...props} menuUser={props.menu} logoutUser={handleLogoutUser} logoutByToken={logoutUserByTokenExpired}>
+            {props.children}
+            <ToastContainer/>
+          </Layout1>
       )
     }else{
       return(
@@ -91,7 +111,8 @@ MainContainer.propTypes = {
 function mapStateToProps(state){
   return {
     isLogin : state.auth.isAuthenticated,
-    menu: state.menu.modules
+    userState: state.auth.user,
+    menu: state.menu.modules,
   }
 }
 
@@ -101,7 +122,11 @@ function mapDispatchToProps(){
       logout,
       resetCart,
       setMenu,
-      removeMenu
+      removeMenu,
+      setConfig,
+      removeConfig,
+      setOwnerships,
+      cleanOwenerships
     }
 }
 

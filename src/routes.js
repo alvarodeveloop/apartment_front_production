@@ -265,4 +265,28 @@ export const routes = [
     path: '/request/area/managment/form/:id',
     component: lazy(() => import('./pages/request_services/AreaFormSolicitudePage'))
   },
+  {
+    path: '/ownership/frequent_questions',
+    component: lazy(() => import('./pages/ownerships/FrequentQuestionPage'))
+  },
+  {
+    path: '/ownership/asks',
+    component: lazy(() => import('./pages/ownerships/QueryPage'))
+  },
+  {
+    path: '/ownership/downloads',
+    component: lazy(() => import('./pages/ownerships/DownloadOwnershipPage'))
+  },
+  {
+    path: '/ownership/request_service',
+    component: lazy(() => import('./pages/ownerships/SolicitudeSSPage'))
+  },
+  {
+    path: '/request/property/managment_failures',
+    component: lazy(() => import('./pages/request_services/ManagementFailuresPropertyPage'))
+  },
+  {
+    path: '/ownership/status_services',
+    component: lazy(() => import('./pages/ownerships/FailureManagePage'))
+  },
 ]

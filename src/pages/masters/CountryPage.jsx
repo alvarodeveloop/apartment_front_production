@@ -13,7 +13,7 @@ import Table from 'components/Table'
 import axios from 'axios'
 import InputField from 'components/input/InputComponent'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
@@ -73,13 +73,13 @@ const CountryPage = (props) => {
 
   const confirmDeleteRegister = id => {
     axios.delete(API_URL+'master_countrys/'+id).then(result => {
-      NotificationManager.success('Registro Eliminado')
+      toast.success('Registro Eliminado')
       fetchData()
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -112,9 +112,9 @@ const CountryPage = (props) => {
       setCountrys(result.data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -144,26 +144,26 @@ const CountryPage = (props) => {
     let objectPost = Object.assign({},countryForm)
     if(objectPost.id){
       axios.put(API_URL+'master_countrys/'+objectPost.id,objectPost).then(result => {
-        NotificationManager.success('Registro Modificado')
+        toast.success('Registro Modificado')
         fetchData()
         clearForm()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'master_countrys',objectPost).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         fetchData()
         clearForm()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }

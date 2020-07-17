@@ -19,7 +19,7 @@ import 'styles/components/modalComponents.css'
 import InputField from 'components/input/InputComponent'
 import InputFieldRef from 'components/input/InputComponentRef'
 import Table from 'components/Table'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import { API_URL } from 'utils/constants'
 import axios from 'axios'
 import ClientFormComponent from 'components/ClientFormComponent'
@@ -131,7 +131,6 @@ const RequestPropertyForm = (props) => {
       axios.get(API_URL+'get_block_hour'),
       axios.get(API_URL+'housing_complexe'),
       axios.get(API_URL+'params_service_origin'),
-      axios.get(API_URL+'master_precint'),
       axios.get(API_URL+'params_manage_problems_tipology_by_type/'+1),
       axios.get(API_URL+'params_manage_problems_point_failures'),
       axios.get(API_URL+'params_manage_problems_related_failures'),
@@ -145,20 +144,19 @@ const RequestPropertyForm = (props) => {
     }
 
     Promise.all(promises).then(result => {
-      if(result[8].data){
+      if(result[7].data){
         setClientData(result[0].data)
         setBlocks(result[1].data)
         setHousingComplexes(result[2].data)
         setOrigins(result[3].data)
-        setPrecints(result[4].data)
-        setTipologyFailures(result[5].data)
-        setPointFailures(result[6].data)
-        setRelatedFailures(result[7].data)
+        setTipologyFailures(result[4].data)
+        setPointFailures(result[5].data)
+        setRelatedFailures(result[6].data)
         if(props.match.params.id){
-          setFailureData(result[9].data)
+          setFailureData(result[8].data)
         }
       }else{
-        NotificationManager.error('Debe hacer la configuración de las s.s primero')
+        toast.error('Debe hacer la configuración de las s.s primero')
         setTimeout(function () {
           props.history.replace('/masters/config')
         }, 1000);
@@ -166,9 +164,9 @@ const RequestPropertyForm = (props) => {
 
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -198,6 +196,7 @@ const RequestPropertyForm = (props) => {
     }else if(e.target.name === "id_housing_complexe"){
       setData({...data, [e.target.name] : e.target.value})
       getOwnerships(e.target.value)
+      getPrecints(e.target.value)
     }else if(e.target.name === "id_ownership"){
       if(e.target.value){
         let owner = ownerships.find(v => v.id == e.target.value)
@@ -251,10 +250,10 @@ const RequestPropertyForm = (props) => {
       setPointFailures(result.data)
     }).catch(err => {
      	 if(err.response){
-         NotificationManager.error(err.response.data.message)
+         toast.error(err.response.data.message)
        }else{
          console.log(err);
-         NotificationManager.error('Error,contacte con soporte')
+         toast.error('Error,contacte con soporte')
        }
     })
 
@@ -265,10 +264,23 @@ const RequestPropertyForm = (props) => {
       setOwnerships(result.data)
     }).catch(err => {
      	 if(err.response){
-         NotificationManager.error(err.response.data.message)
+         toast.error(err.response.data.message)
        }else{
          console.log(err);
-         NotificationManager.error('Error,contacte con soporte')
+         toast.error('Error,contacte con soporte')
+       }
+    })
+  }
+
+  const getPrecints = id => {
+    axios.get(API_URL+'master_precint_by_ownership_ss/'+id).then(result => {
+      setPrecints(result.data)
+    }).catch(err => {
+     	 if(err.response){
+         toast.error(err.response.data.message)
+       }else{
+         console.log(err);
+         toast.error('Error,contacte con soporte')
        }
     })
   }
@@ -287,28 +299,28 @@ const RequestPropertyForm = (props) => {
 
     if(objectPost.id){
       axios.put(API_URL+'ownership_ss/'+objectPost.id,objectPost).then(result => {
-        NotificationManager.success('Registro Modificado')
+        toast.success('Registro Modificado')
         fetchData()
         clearForm()
         clearForm1()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'ownership_ss',objectPost).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         fetchData()
         clearForm()
         clearForm1()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }
@@ -325,27 +337,27 @@ const RequestPropertyForm = (props) => {
 
   const addFailure = () => {
     if(!data1.id_precint){
-      NotificationManager.error('Debe Agregar un recinto')
+      toast.error('Debe Agregar un recinto')
       return false
     }
 
     if(!data1.id_related_failure){
-      NotificationManager.error('Debe agregar una relación de falla')
+      toast.error('Debe agregar una relación de falla')
       return false
     }
 
     if(!data1.id_tipology_failure){
-      NotificationManager.error('Debe agregar una tipologia de falla')
+      toast.error('Debe agregar una tipologia de falla')
       return false
     }
 
     if(!data1.id_point_failure){
-      NotificationManager.error('Debe agregar una falla puntual')
+      toast.error('Debe agregar una falla puntual')
       return false
     }
 
     if(!data1.description){
-      NotificationManager.error('Debe agregar una descripción de la falla')
+      toast.error('Debe agregar una descripción de la falla')
       return false
     }
 
@@ -355,12 +367,12 @@ const RequestPropertyForm = (props) => {
     axios.post(API_URL+'ownership_failure_ss',objectPost).then(result => {
       clearForm1()
       getFailures()
-      NotificationManager.success('Falla Agregada')
+      toast.success('Falla Agregada')
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -371,9 +383,9 @@ const RequestPropertyForm = (props) => {
         setFailureData(result.data)
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
 
@@ -382,9 +394,9 @@ const RequestPropertyForm = (props) => {
         setFailureData(result.data)
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }
@@ -432,9 +444,9 @@ const RequestPropertyForm = (props) => {
       console.log('registros borrados');
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -442,12 +454,12 @@ const RequestPropertyForm = (props) => {
   const removeFailure = id => {
     axios.delete(API_URL+'ownership_failure_ss/'+id).then(result => {
       getFailures()
-      NotificationManager.success('Falla eliminada')
+      toast.success('Falla eliminada')
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -648,7 +660,7 @@ const RequestPropertyForm = (props) => {
               >
                 <option value="">--Seleccione--</option>
                 {precints.map((v,i) => (
-                  <option value={v.id} key={i}>{v.name}</option>
+                  <option value={v.id} key={i}>{v.precint.name}</option>
                 ))}
               </InputField>
               <InputField

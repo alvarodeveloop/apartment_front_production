@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Route } from 'react-router-dom';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { ToastContainer, toast } from 'react-toastify'
 
 const InvoiceContainer = ({ component: Component,...rest }) => (
   <React.Suspense fallback={<div>Loading... </div>}>
@@ -10,7 +10,7 @@ const InvoiceContainer = ({ component: Component,...rest }) => (
       render={props => (
         <React.Fragment>
           <Component {...props} />
-          <NotificationContainer />
+          <ToastContainer />
         </React.Fragment>
       )}
     />

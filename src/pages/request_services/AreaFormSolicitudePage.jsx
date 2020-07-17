@@ -21,7 +21,7 @@ import {
 } from 'react-icons/md'
 import 'styles/pages/managementSolicitudePropertyFormPage.css'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import InputField from 'components/input/InputComponent'
 import InputFieldRef from 'components/input/InputComponentRef'
 import axios from 'axios'
@@ -145,10 +145,10 @@ const AreaFormSolicitudePage = (props) => {
 
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -233,15 +233,15 @@ const AreaFormSolicitudePage = (props) => {
       formData.append('document',e.target.files[0])
       const id = props.match.params.id
       axios.put(API_URL+'area_ss_file/'+id,formData).then(result => {
-        NotificationManager.success('Archivo subido con éxito')
+        toast.success('Archivo subido con éxito')
         fetchData()
         e.target.value = ""
       }).catch(err => {
         e.target.value = ""
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error,contacte con soporte')
+          toast.error('Error,contacte con soporte')
         }
       })
     }
@@ -268,14 +268,14 @@ const AreaFormSolicitudePage = (props) => {
     let object_put = Object.assign({},form1)
     let id_put = props.match.params.id
     axios.put(API_URL+'area_ss_status/'+id_put,object_put).then(result => {
-      NotificationManager.success('Datos modificados')
+      toast.success('Datos modificados')
       fetchData()
       inputRef.current.focus()
     }).catch(err => {
      	 if(err.response){
-         NotificationManager.error(err.response.data.message)
+         toast.error(err.response.data.message)
        }else{
-         NotificationManager.error('Error, contacte con soporte')
+         toast.error('Error, contacte con soporte')
        }
     })
   }
@@ -302,13 +302,13 @@ const AreaFormSolicitudePage = (props) => {
 
   const removeWorkerTask = (id,id_area_ss_task) => {
     axios.delete(API_URL+'area_ss_task_worker/'+id+'/'+id_area_ss_task).then(result => {
-      NotificationManager.success('Trabajador removido')
+      toast.success('Trabajador removido')
       fetchData()
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -350,15 +350,15 @@ const AreaFormSolicitudePage = (props) => {
     let objectPost = Object.assign({},form3)
     objectPost.status = 2
     axios.put(API_URL+'area_ss_task/'+taskActive.id,objectPost).then(result => {
-      NotificationManager.success('Tarea Cerrada')
+      toast.success('Tarea Cerrada')
       fetchData()
       openModalCloseTask()
       clearForm3()
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -381,9 +381,9 @@ const AreaFormSolicitudePage = (props) => {
       FileSaver.saveAs(result.data,data.file)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -415,9 +415,9 @@ const AreaFormSolicitudePage = (props) => {
       FileSaver.saveAs(result.data,'orden_post_venta_area.pdf')
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

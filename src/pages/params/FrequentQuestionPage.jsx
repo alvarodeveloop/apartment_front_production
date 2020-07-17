@@ -14,7 +14,7 @@ import axios from 'axios'
 import InputFieldRef from 'components/input/InputComponentRef'
 import InputField from 'components/input/InputComponent'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
@@ -81,13 +81,13 @@ const FrequentQuestionPage = (props) => {
 
   const confirmDeleteRegister = id => {
     axios.delete(API_URL+'params_frequent_question/'+id).then(result => {
-      NotificationManager.success('Registro Eliminado')
+      toast.success('Registro Eliminado')
       fetchData()
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -120,9 +120,9 @@ const FrequentQuestionPage = (props) => {
       setData(result.data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -158,26 +158,26 @@ const FrequentQuestionPage = (props) => {
     let objectPost = Object.assign({},dataForm)
     if(objectPost.id){
       axios.put(API_URL+'params_frequent_question/'+objectPost.id,objectPost).then(result => {
-        NotificationManager.success('Registro Modificado')
+        toast.success('Registro Modificado')
         fetchData()
         clearForm()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'params_frequent_question',objectPost).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         fetchData()
         clearForm()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }

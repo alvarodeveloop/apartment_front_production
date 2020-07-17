@@ -15,7 +15,7 @@ import {
 import 'styles/pages/requestPropertyForm.css'
 import InputFieldRef from 'components/input/InputComponentRef'
 import InputField from 'components/input/InputComponent'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import axios from 'axios'
 import { API_URL } from 'utils/constants'
 import Table from 'components/Table'
@@ -195,10 +195,10 @@ const AreaManagemenSolicitudePage = (props) => {
       console.log(result[4].data,'aqioo');
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -212,9 +212,9 @@ const AreaManagemenSolicitudePage = (props) => {
       setShowMessage(false)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

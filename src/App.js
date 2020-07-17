@@ -7,7 +7,7 @@ import './vendor/styles/theme-corporate.scss'
 import './vendor/styles/colors.scss'
 import './vendor/styles/uikit.scss'
 import './App.scss'
-import 'react-notifications/lib/notifications.css';
+import 'react-toastify/dist/ReactToastify.css';
 import './styles/reduction.scss';
 
 class App extends Component {

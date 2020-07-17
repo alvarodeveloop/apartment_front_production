@@ -1,10 +1,3 @@
-export const setConfigStore = data => {
-    return {
-      type: 'setConfigStore',
-      configStore: data
-    }
-}
-
 export const setConfig = data => {
     return {
       type: 'setConfig',

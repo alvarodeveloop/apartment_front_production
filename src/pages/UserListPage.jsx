@@ -10,14 +10,13 @@ import {
   DropdownButton,
   Dropdown
 } from 'react-bootstrap'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 import { API_URL } from 'utils/constants'
 import { userColumns } from 'utils/columns'
 import Table from 'components/Table'
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import 'styles/pages/users.css'
-
 
 const UserListPage = (props) => {
 
@@ -72,14 +71,14 @@ const UserListPage = (props) => {
 
   const confirmDeleteRegister = id => {
     axios.delete(API_URL+'user/'+id).then(result => {
-      NotificationManager.success('Registro eliminado con éxito')
+      toast.success('Registro eliminado con éxito')
       fetchData()
     }).catch(err => {
       const { response } = err
       if(response){
-        NotificationManager.error(response.data.message)
+        toast.error(response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -95,9 +94,9 @@ const UserListPage = (props) => {
       const { response } = err
       console.log(err,response)
       if(response){
-        NotificationManager.error(response.data.message)
+        toast.error(response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -120,8 +119,5 @@ const UserListPage = (props) => {
   )
 }
 
-UserListPage.propTypes = {
-
-}
 
 export default UserListPage

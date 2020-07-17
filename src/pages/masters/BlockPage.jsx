@@ -13,13 +13,13 @@ import Table from 'components/Table'
 import axios from 'axios'
 import InputFieldRef from 'components/input/InputComponentRef'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 let blockColumns = []
 
-const CategoryPage = (props) => {
+const BlockPage = (props) => {
 
   const [validated, setValidated] = useState(false)
   const [blocks, setBlocks] = useState([])
@@ -71,13 +71,13 @@ const CategoryPage = (props) => {
 
   const confirmDeleteRegister = id => {
     axios.delete(API_URL+'master_block/'+id).then(result => {
-      NotificationManager.success('Registro Eliminado')
+      toast.success('Registro Eliminado')
       fetchData()
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -110,9 +110,9 @@ const CategoryPage = (props) => {
       setBlocks(result.data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -142,26 +142,26 @@ const CategoryPage = (props) => {
     let objectPost = Object.assign({},blockForm)
     if(objectPost.id){
       axios.put(API_URL+'master_block/'+objectPost.id,objectPost).then(result => {
-        NotificationManager.success('Registro Modificado')
+        toast.success('Registro Modificado')
         fetchData()
         clearForm()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'master_block',objectPost).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         fetchData()
         clearForm()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }
@@ -199,7 +199,7 @@ const CategoryPage = (props) => {
   )
 }
 
-CategoryPage.defaultProps = {
+BlockPage.defaultProps = {
   inputName: {
     type: 'text',
     required: true,
@@ -212,4 +212,4 @@ CategoryPage.defaultProps = {
   },
 }
 
-export default CategoryPage
+export default BlockPage

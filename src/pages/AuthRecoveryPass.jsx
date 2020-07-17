@@ -7,7 +7,7 @@ import {
   Form,
   Button,
 } from 'react-bootstrap'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 import 'styles/pages/authPage.css'
 import axios from 'axios'
 import InputFieldRef from 'components/input/InputComponentRef'
@@ -50,7 +50,7 @@ const AuthRecoveryPass = (props) => {
     const passObject = Object.assign({},formPass)
     setShowMessage(true)
     axios.post(API_URL+'auth_recovery_pass',passObject).then(result => {
-      NotificationManager.success('Se ha enviado un correo de recuperación a su email')
+      toast.success('Se ha enviado un correo de recuperación a su email')
       setTimeout(() => {
         goToLogin()
       },1500)
@@ -58,10 +58,10 @@ const AuthRecoveryPass = (props) => {
       const { response } = err
       setShowMessage(false)
       if(response){
-        NotificationManager.error(response.data.message,'Error')
+        toast.error(response.data.message,'Error')
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

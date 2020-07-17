@@ -7,7 +7,7 @@ import {
   Form,
   Button,
 } from 'react-bootstrap'
-import {NotificationManager} from 'react-notifications';
+import { toast } from 'react-toastify'
 import 'styles/pages/authPage.css'
 import axios from 'axios'
 import InputFieldRef from 'components/input/InputComponentRef'
@@ -46,14 +46,14 @@ const AuthRecoveryPassForm = (props) => {
     }
     const passObject = Object.assign({},formPass)
     if(passObject.password !== passObject.password_repeat){
-      NotificationManager.error('Las contraseñas no coinciden')
+      toast.error('Las contraseñas no coinciden')
       return false
     }
 
     passObject.token = props.match.params.token
 
     axios.post(API_URL+'auth_recovery_pass_form',passObject).then(result => {
-      NotificationManager.success('Contraseña Cambiada')
+      toast.success('Contraseña Cambiada')
       setTimeout(() => {
         goToLogin()
       },1500)
@@ -61,10 +61,10 @@ const AuthRecoveryPassForm = (props) => {
     }).catch(err => {
       const { response } = err
       if(response){
-        NotificationManager.error(response.data.message)
+        toast.error(response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -73,7 +73,7 @@ const AuthRecoveryPassForm = (props) => {
    const token = props.match.params.token
    axios.get(API_URL+'auth_verify_token_pass/'+token).then(result => {
      if(!result.data){
-       NotificationManager.error('Token ya utilizado')
+       toast.error('Token ya utilizado')
        goToLogin()
      }else{
       inputRef.current.focus()
@@ -81,10 +81,10 @@ const AuthRecoveryPassForm = (props) => {
    }).catch(err => {
      const { response } = err
      if(response){
-       //NotificationManager.error(response.data.message)
+       //toast.error(response.data.message)
      }else{
        console.log(err);
-       //NotificationManager.error('Error, contacte con soporte')
+       //toast.error('Error, contacte con soporte')
      }
    })
  }

@@ -21,7 +21,7 @@ import {
 } from 'react-icons/md'
 import 'styles/pages/managementSolicitudePropertyFormPage.css'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import InputField from 'components/input/InputComponent'
 import InputFieldRef from 'components/input/InputComponentRef'
 import axios from 'axios'
@@ -76,7 +76,7 @@ const ManagementSolicitudePropertyFormPage = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-    
+
     fetchData(true)
     inputRef.current.focus()
   },[])
@@ -146,10 +146,10 @@ const ManagementSolicitudePropertyFormPage = (props) => {
 
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -234,15 +234,15 @@ const ManagementSolicitudePropertyFormPage = (props) => {
       formData.append('document',e.target.files[0])
       const id = props.match.params.id
       axios.put(API_URL+'ownership_ss_file/'+id,formData).then(result => {
-        NotificationManager.success('Archivo subido con éxito')
+        toast.success('Archivo subido con éxito')
         fetchData()
         e.target.value = ""
       }).catch(err => {
         e.target.value = ""
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error,contacte con soporte')
+          toast.error('Error,contacte con soporte')
         }
       })
     }
@@ -269,14 +269,14 @@ const ManagementSolicitudePropertyFormPage = (props) => {
     let object_put = Object.assign({},form1)
     let id_put = props.match.params.id
     axios.put(API_URL+'ownership_ss_status/'+id_put,object_put).then(result => {
-      NotificationManager.success('Datos modificados')
+      toast.success('Datos modificados')
       fetchData()
       inputRef.current.focus()
     }).catch(err => {
      	 if(err.response){
-         NotificationManager.error(err.response.data.message)
+         toast.error(err.response.data.message)
        }else{
-         NotificationManager.error('Error, contacte con soporte')
+         toast.error('Error, contacte con soporte')
        }
     })
   }
@@ -303,13 +303,13 @@ const ManagementSolicitudePropertyFormPage = (props) => {
 
   const removeWorkerTask = (id,id_ownership_ss_task) => {
     axios.delete(API_URL+'ownership_ss_task_worker/'+id+'/'+id_ownership_ss_task).then(result => {
-      NotificationManager.success('Trabajador removido')
+      toast.success('Trabajador removido')
       fetchData()
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -351,15 +351,15 @@ const ManagementSolicitudePropertyFormPage = (props) => {
     let objectPost = Object.assign({},form3)
     objectPost.status = 2
     axios.put(API_URL+'ownership_ss_task/'+taskActive.id,objectPost).then(result => {
-      NotificationManager.success('Tarea Cerrada')
+      toast.success('Tarea Cerrada')
       fetchData()
       openModalCloseTask()
       clearForm3()
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -382,9 +382,9 @@ const ManagementSolicitudePropertyFormPage = (props) => {
       FileSaver.saveAs(result.data,data.file)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -416,9 +416,9 @@ const ManagementSolicitudePropertyFormPage = (props) => {
       FileSaver.saveAs(result.data,'orden_post_venta.pdf')
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error('Error, contacte con soporte o revise su configuración de empresa a ver si ya esta realizada')
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -883,7 +883,7 @@ const ManagementSolicitudePropertyFormPage = (props) => {
                         <Card key={i}>
                           <Card.Header style={{ backgroundColor: 'rgb(64, 64, 163)'}}>
                             <Accordion.Toggle as={Button} variant="link" eventKey={i} style={{color: 'white'}}>
-                              #{i + 1}.-Recinto: {v.precint.name} | Relación de Falla: {v.related.name} | Falla Puntual: {v.point.name}
+                              #{i + 1}.-Recinto: {v.precint.name} | Relación de Falla: {v.related.name} | Falla Puntual: {v.point ? v.point.name : ''}
                             </Accordion.Toggle>
                           </Card.Header>
                           <Accordion.Collapse eventKey={i}>

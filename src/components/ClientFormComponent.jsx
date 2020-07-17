@@ -11,7 +11,7 @@ import InputField from 'components/input/InputComponent'
 import InputFieldRef from 'components/input/InputComponentRef'
 import axios from 'axios'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 
 const ClientFormComponent = (props) => {
 
@@ -69,9 +69,9 @@ const ClientFormComponent = (props) => {
       }
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
 
@@ -112,27 +112,27 @@ const ClientFormComponent = (props) => {
 
     if(objectPost.id){
       axios.put(API_URL+'client/'+objectPost.id,objectPost).then(result => {
-        NotificationManager.success('Registro Modificado')
+        toast.success('Registro Modificado')
         gotBackToTable()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'client',objectPost).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         clearForm()
         if(props.isModal){
           gotBackToTable(true)
         }
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }

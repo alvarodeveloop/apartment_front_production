@@ -9,7 +9,7 @@ import {
   Modal,
 } from 'react-bootstrap'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import InputField from 'components/input/InputComponent'
 import axios from 'axios'
 import Table from 'components/Table'
@@ -56,7 +56,10 @@ const ManagementSolicitudeFailureFormComponent = (props) => {
       detail_close: objectFailure.detail_close
     })
 
-    setPointFailures(props.failure.tipology.point_failures)
+    if(props.failure.tipology){
+      setPointFailures(props.failure.tipology.point_failures)
+    }
+
   },[props.failure])
 
   const handleSubmit = e => {
@@ -75,14 +78,14 @@ const ManagementSolicitudeFailureFormComponent = (props) => {
     });
     let route = props.area ? API_URL+'area_failure_ss/' : API_URL+'ownership_failure_ss/'
     axios.put(route+props.failure.id,formData).then(result => {
-      NotificationManager.success('Falla Modificada')
+      toast.success('Falla Modificada')
       props.fetchData()
       clearForm()
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -110,9 +113,9 @@ const ManagementSolicitudeFailureFormComponent = (props) => {
       setPointFailures(result.data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -143,9 +146,9 @@ const ManagementSolicitudeFailureFormComponent = (props) => {
       FileSaver.saveAs(result.data,props.failure.filename)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

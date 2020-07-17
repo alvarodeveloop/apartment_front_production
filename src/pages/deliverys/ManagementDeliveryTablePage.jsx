@@ -13,7 +13,7 @@ import {
 import * as moment from 'moment-timezone'
 import axios from 'axios'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import InputField from 'components/input/InputComponent'
 import InputFieldRef from 'components/input/InputComponentRef'
 import { calculateDifferenceDaysBetweenDates } from 'utils/functions'
@@ -143,9 +143,9 @@ const ManagementDeliveryTablePage = (props) => {
       setHousing(result[2].data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -169,9 +169,9 @@ const ManagementDeliveryTablePage = (props) => {
       setData(result.data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

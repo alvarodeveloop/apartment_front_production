@@ -1,5 +1,6 @@
 import React, { useEffect , useState, useRef } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import {
   Container,
   Row,
@@ -16,7 +17,7 @@ import {
 import axios from 'axios'
 import InputField from 'components/input/InputComponent'
 import InputFieldRef from 'components/input/InputComponentRef'
-import { NotificationManager } from 'react-notifications'
+import { toast } from 'react-toastify';
 import { API_URL } from 'utils/constants'
 import * as moment from 'moment-timezone'
 import FileSaver from 'file-saver'
@@ -84,11 +85,17 @@ const HousingComplexesForm = (props) => {
   const [models, setModels] = useState([])
 
   useEffect(() => {
-    
-    inputRef.current.focus()
-    fetchData()
-    if(props.match.params.id){
-      fetchDataToModified(props.match.params.id)
+    if(props.config_ss && Object.keys(props.config_ss).length > 0){
+      inputRef.current.focus()
+      fetchData()
+      if(props.match.params.id){
+        fetchDataToModified(props.match.params.id)
+      }
+    }else{
+      toast.error('Debe hacer la configuración primero')
+      setTimeout(function () {
+        props.history.replace('/masters/config')
+      }, 1000);
     }
   },[])
 
@@ -159,14 +166,14 @@ const HousingComplexesForm = (props) => {
   const deleteFile = dataFile => {
 
     axios.delete(API_URL+'housing_complexe_destroy_file/'+dataFile.id).then(result => {
-      NotificationManager.success('Archivo Eliminado')
+      toast.success('Archivo Eliminado')
       fetchDataToModified(props.match.params.id)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
 
@@ -179,10 +186,10 @@ const HousingComplexesForm = (props) => {
       FileSaver.saveAs(result.data,dataFile.name);
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -194,7 +201,7 @@ const HousingComplexesForm = (props) => {
       axios.get(API_URL+'enterprise'),
       axios.get(API_URL+'master_enclosure'),
       axios.get(API_URL+'master_config_file'),
-      axios.get(API_URL+'master_models'),
+      axios.get(API_URL+'params_model_property'),
     ]
 
     Promise.all(promises).then(result => {
@@ -207,9 +214,9 @@ const HousingComplexesForm = (props) => {
 
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -270,27 +277,12 @@ const HousingComplexesForm = (props) => {
         setFileAdjuntRegistered(result.data.files)
       }
 
-      if(result.data.id_model_precint){
-        NotificationManager.info('Buscando Recursos')
-        axios.get(API_URL+'master_precint_by_model/'+result.data.id_model_precint).then(result => {
-          setPrecintsModel(result.data)
-        }).catch(err => {
-          if(err.response){
-            NotificationManager.error(err.response.data.message)
-          }else{
-            NotificationManager.error('Error, contacte con soporte')
-          }
-        })
-      }else{
-        setPrecintsModel([])
-      }
-
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
 
@@ -305,16 +297,7 @@ const HousingComplexesForm = (props) => {
 
     setForm1({...form1, id_model_precint: val, precint_by_housing_complexes_model: []})
     if(val){
-      NotificationManager.info('Buscando Recursos')
-      axios.get(API_URL+'master_precint_by_model/'+val).then(result => {
-        setPrecintsModel(result.data)
-      }).catch(err => {
-        if(err.response){
-          NotificationManager.error(err.response.data.message)
-        }else{
-          NotificationManager.error('Error, contacte con soporte')
-        }
-      })
+      setPrecintsModel()
     }else{
       setPrecintsModel([])
     }
@@ -342,8 +325,15 @@ const HousingComplexesForm = (props) => {
   }
 
   const onChangeFile = e => {
-    setForm1({...form1, fileAdjunt: e.target.files[0] })
-    setNameFileAdjunt(e.target.files[0].name)
+
+    if(props.config_ss.valid_format_documents.indexOf(e.target.files[0].type.split('/')[1]) !== -1){
+      setForm1({...form1, fileAdjunt: e.target.files[0] })
+      setNameFileAdjunt(e.target.files[0].name)
+    }else{
+      toast.error('El tipo de archivo no es valido')
+      document.getElementById('file_adjunt').value = ""
+      document.getElementById('file_adjunt').src = ""
+    }
   }
 
 
@@ -360,7 +350,7 @@ const HousingComplexesForm = (props) => {
     if (form.checkValidity() === false) {
       e.stopPropagation();
       setValidated(true);
-      NotificationManager.error('Hay campos que no cumplen con los requisitos, verifique por favor')
+      toast.error('Hay campos que no cumplen con los requisitos, verifique por favor')
       return
     }
 
@@ -379,26 +369,26 @@ const HousingComplexesForm = (props) => {
 
     if(objectPost.id){
       axios.put(API_URL+'housing_complexe/'+objectPost.id,newFormData).then(result => {
-        NotificationManager.success('Registro Modificado')
+        toast.success('Registro Modificado')
         gotBackToTable()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
           console.log(err);
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }else{
       axios.post(API_URL+'housing_complexe',newFormData).then(result => {
-        NotificationManager.success('Registro Creado')
+        toast.success('Registro Creado')
         clearForm()
       }).catch(err => {
         if(err.response){
-          NotificationManager.error(err.response.data.message)
+          toast.error(err.response.data.message)
         }else{
           console.log(err);
-          NotificationManager.error('Error, contacte con soporte')
+          toast.error('Error, contacte con soporte')
         }
       })
     }
@@ -520,7 +510,7 @@ const HousingComplexesForm = (props) => {
                           <Row>
                             <InputField
                               {...props.inputAdminPostventa}
-                              value={form1.admin_postventa}
+                              value={form1.admin_postventa !== 'null' ? form1.admin_postventa : ''}
                               handleChange={onChange}
                             />
                             <Col sm={3} md={3} lg={3} xs={6}>
@@ -544,7 +534,7 @@ const HousingComplexesForm = (props) => {
                           <Row>
                             <InputField
                               {...props.inputDirProyectPostventa}
-                              value={form1.dir_proyect_postventa}
+                              value={form1.dir_proyect_postventa !== 'null' ? form1.dir_proyect_postventa : ''}
                               handleChange={onChange}
                             />
                             <Col sm={3} md={3} lg={3} xs={6}>
@@ -563,7 +553,7 @@ const HousingComplexesForm = (props) => {
                           <Row>
                             <InputField
                               {...props.inputOtherDestinatary}
-                              value={form1.other_destinatary_postventa}
+                              value={form1.other_destinatary_postventa !== 'null' ? form1.other_destinatary_postventa : ''}
                               handleChange={onChange}
                             />
                             <Col sm={3} md={3} lg={3} xs={6}>
@@ -602,23 +592,25 @@ const HousingComplexesForm = (props) => {
                             </Col>
                           </Row>
                           <br/>
-                          <Row>
-                            {precintsModel.map((v,i) => (
-                              <Col sm={3} md={3} lg={3} key={i}>
-                                <label forhtml={'check_'+v.name}>
-                                  <input id={'check_'+v.name} type="checkbox" name="precint_by_housing_complexes_model" checked={!!form1.precint_by_housing_complexes_model.find(v1 => v1 == v.id )} value={v.id} onChange={onChangePrecintHousingComplexe} />
-                                  &nbsp;{v.name}
-                                </label>
-                              </Col>
-                            ))}
-                          </Row>
+                          {form1.id_model_precint ? (
+                            <Row>
+                              {precints.map((v,i) => (
+                                <Col sm={3} md={3} lg={3} key={i}>
+                                  <label forhtml={'check_'+v.name}>
+                                    <input id={'check_'+v.name} type="checkbox" name="precint_by_housing_complexes_model" checked={!!form1.precint_by_housing_complexes_model.find(v1 => v1 == v.id )} value={v.id} onChange={onChangePrecintHousingComplexe} />
+                                    &nbsp;{v.name}
+                                  </label>
+                                </Col>
+                              ))}
+                            </Row>
+                          ) : ''}
                         </Tab>
                         <Tab eventKey="adjunt_data" title="Datos Adjuntos">
                           <Row>
                             <Col sm={4} md={4} lg={4} xs={4}>
                               <br/>
                               <Button variant="secondary" block={true} onClick={openFileInput}>Archivos Comunes</Button>
-                              <input type="file" name="file_adjunt" id="file_adjunt" style={{display: 'none'}} onChange={onChangeFile} />
+                              <input accept={props.config_ss ? props.config_ss.valid_format_documents : ''} type="file" name="file_adjunt" id="file_adjunt" style={{display: 'none'}} onChange={onChangeFile} />
                             </Col>
                             <Col sm={4} md={4} lg={4} xs={4}>
                               <br/>
@@ -1085,4 +1077,10 @@ HousingComplexesForm.defaultProps = {
   },
 }
 
-export default HousingComplexesForm
+function mapStateToProps(state){
+  return {
+    config_ss : state.configs.config
+  }
+}
+
+export default connect(mapStateToProps,{})(HousingComplexesForm)

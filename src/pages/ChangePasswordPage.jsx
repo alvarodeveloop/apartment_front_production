@@ -12,7 +12,7 @@ import axios from 'axios'
 import InputFieldRef from 'components/input/InputComponentRef'
 import InputField from 'components/input/InputComponent'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 
 let unit_columns = []
 
@@ -56,13 +56,13 @@ const MeasurementUnitPage = (props) => {
     let objectPost = Object.assign({},dataForm)
 
     axios.post(API_URL+'user_change_password',objectPost).then(result => {
-      NotificationManager.success('Contraseña Cambiada')
+      toast.success('Contraseña Cambiada')
       clearForm()
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

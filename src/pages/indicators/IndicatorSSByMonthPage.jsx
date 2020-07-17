@@ -14,7 +14,7 @@ import axios from 'axios'
 import InputFieldRef from 'components/input/InputComponentRef'
 import InputField from 'components/input/InputComponent'
 import { API_URL } from 'utils/constants'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 import * as moment from 'moment-timezone'
 import 'styles/pages/indicatorPage.css'
 import {Bar} from 'react-chartjs-2';
@@ -103,10 +103,10 @@ const IndicatorSSByMonthPage = (props) => {
       setYears(result[1].data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
 
@@ -134,10 +134,10 @@ const IndicatorSSByMonthPage = (props) => {
       setShowForm(false)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
         console.log(err);
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

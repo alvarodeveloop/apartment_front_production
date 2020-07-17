@@ -6,7 +6,7 @@ import {
   // MdCardGiftcard,
   MdLoyalty,
 } from 'react-icons/md';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { ToastContainer, toast } from 'react-toastify'
 import 'styles/pages/authPage.css'
 import axios from 'axios'
 import { API_URL } from 'utils/constants'
@@ -61,9 +61,9 @@ const AuthPage = props => {
     }).catch(err => {
       const { response } = err
       if(response){
-        NotificationManager.error(response.data.message,'Error')
+        toast.error(response.data.message,'Error')
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -132,7 +132,7 @@ const AuthPage = props => {
           </div>
         </Col>
       </Row>
-      <NotificationContainer/>
+      <ToastContainer/>
     </Container>
   )
 }

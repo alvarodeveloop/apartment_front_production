@@ -11,7 +11,7 @@ import {
 import {
   FaEye
 } from 'react-icons/fa'
-import { NotificationManager } from 'react-notifications';
+import { toast } from 'react-toastify'
 import { API_URL } from 'utils/constants'
 import axios from 'axios'
 import InputField from 'components/input/InputComponent'
@@ -53,11 +53,11 @@ const ModalFollowingTaskComponent = (props) => {
     let objectPost = Object.assign({},data)
 
     props.submit(objectPost).then(result => {
-      NotificationManager.success('Seguimiento Agregado')
+      toast.success('Seguimiento Agregado')
       clearForm()
       props.onHide()
     }).catch(err => {
-      NotificationManager.error(err)
+      toast.error(err)
     })
   }
 
@@ -77,9 +77,9 @@ const ModalFollowingTaskComponent = (props) => {
       setOrigins(result[0].data)
     }).catch(err => {
       if(err.response){
-        NotificationManager.error(err.response.data.message)
+        toast.error(err.response.data.message)
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }

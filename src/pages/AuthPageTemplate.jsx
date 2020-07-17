@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import 'vendor/styles/pages/authentication.scss'
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { ToastContainer, toast } from 'react-toastify'
 import axios from 'axios'
 import { API_URL } from 'utils/constants'
 import { setAuthorizationToken } from 'utils/functions'
@@ -11,6 +11,7 @@ const AuthPageTemplate = props => {
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
+    id_rol: '',
     rememberMe: false
   })
   const [validated, setValidated] = useState(false);
@@ -27,6 +28,10 @@ const AuthPageTemplate = props => {
       setValidated(true);
       return
     }
+    if(credentials.id_rol === '' || credentials.email === '' || credentials.password === ''){
+      toast.error('Todos los campos son requeridos')
+      return false
+    }
 
     axios.post(API_URL+'auth',credentials).then(result => {
       const { data } = result
@@ -37,9 +42,9 @@ const AuthPageTemplate = props => {
     }).catch(err => {
       const { response } = err
       if(response){
-        NotificationManager.error(response.data.message,'Error')
+        toast.error(response.data.message,'Error')
       }else{
-        NotificationManager.error('Error, contacte con soporte')
+        toast.error('Error, contacte con soporte')
       }
     })
   }
@@ -48,7 +53,6 @@ const AuthPageTemplate = props => {
     return (
       <div className="authentication-wrapper authentication-3">
         <div className="authentication-inner">
-
           {/* Side container */}
           {/* Do not display the container on extra small, small and medium screens */}
           <div className="d-none d-lg-flex col-lg-8 align-items-center ui-bg-cover ui-bg-overlay-container p-5" style={{ backgroundImage: `url('${process.env.PUBLIC_URL}/background_1920-16.jpg')` }}>
@@ -98,6 +102,17 @@ const AuthPageTemplate = props => {
                     </Form.Label>
                     <Form.Control type="password" value={credentials.password} onChange={e => onValueChange('password', e)} />
                   </Form.Group>
+                  <Form.Group>
+                    <Form.Label className="d-flex justify-content-between align-items-end">
+                      <div>Tipo de Usuario</div>
+                    </Form.Label>
+                    <Form.Control as="select" value={credentials.id_rol} onChange={e => onValueChange('id_rol', e)}>
+                      <option value=''>--Seleccione--</option>
+                      <option value={1}>Estandart</option>
+                      <option value={5}>Propietario</option>
+                      <option value={6}>Conjunto Habitacional</option>
+                    </Form.Control>
+                  </Form.Group>
 
                   <div className="d-flex justify-content-center align-items-center m-0">
                     <Button variant="primary" type="submit">Acceder</Button>
@@ -113,8 +128,8 @@ const AuthPageTemplate = props => {
             </div>
           </div>
           {/* / Form container */}
-
         </div>
+        <ToastContainer />
       </div>
     )
 

@@ -7,7 +7,6 @@ import { login } from './actions/auth'
 import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducer from './rootReducer'
 import { setAuthorizationToken } from './utils/functions'
-import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App';
 import * as serviceWorker from './registerServiceWorker';
 
