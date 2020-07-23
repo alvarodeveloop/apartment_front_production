@@ -264,7 +264,6 @@ const HousingComplexesForm = (props) => {
         observation_year_4: result.data.observation_year_4,
         rut_administration_client: result.data.rut_administration_client,
         user_client_administration: result.data.user_client_administration,
-        password_client_administration: result.data.password_client_administration,
         name_client_administration: result.data.name_client_administration,
         email_client_administration: result.data.email_client_administration,
         phone_client_administration: result.data.phone_client_administration,

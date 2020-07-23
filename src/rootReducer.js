@@ -5,6 +5,7 @@ import configs from './reducer/configs';
 import menu from './reducer/menu';
 import theme from './reducer/theme';
 import ownership from './reducer/ownership';
+import housing from './reducer/housing';
 
 export default combineReducers({
   auth,
@@ -12,5 +13,6 @@ export default combineReducers({
   configs,
   menu,
   theme,
-  ownership
+  ownership,
+  housing
 });

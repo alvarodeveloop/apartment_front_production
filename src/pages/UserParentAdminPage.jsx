@@ -96,8 +96,11 @@ const UserParentAdminPage = (props) => {
       setValidated(true);
       return
     }
-
     let objectPost = Object.assign({},formData)
+    if(objectPost.password !== objectPost.password_repeat){
+      toast.error('Error, las contraseñas no coinciden')
+      return false
+    }
 
     if(objectPost.id){
       axios.put(API_URL+'user_admin_parent/'+objectPost.id,objectPost).then(result => {

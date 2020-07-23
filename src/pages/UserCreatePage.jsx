@@ -259,23 +259,24 @@ const UserCreatePage  = props => {
                   </Col>
                 ))}
               </Row>
-
-              <div className="fixedBottom">
-                <Row>
-                  <Col sm={6} md={6} lg={6} xs={12}>
-                    <Button variant="secondary" block={true} onClick={addAllModules}>Seleccionar Todos <FaCheckCircle /></Button>
-                  </Col>
-                  <Col sm={6} md={6} lg={6} xs={12}>
-                    <Button variant="secondary" block={true} onClick={removeAllModules}>Deseleccionar Todos <FaTrashAlt /></Button>
-                  </Col>
-                </Row>
-                <Row className="justify-content-center">
-                  <Col sm={12} md={12} lg={12}>
-                    <br/>
-                    <p>Hacer click en el botón enviar para guardar los cambios</p>
-                  </Col>
-                </Row>
-              </div>
+              <Row>
+                <Col sm={12} md={12} lg={12}>
+                    <Row>
+                      <Col sm={6} md={6} lg={6} xs={12}>
+                        <Button variant="secondary" block={true} onClick={addAllModules}>Seleccionar Todos <FaCheckCircle /></Button>
+                      </Col>
+                      <Col sm={6} md={6} lg={6} xs={12}>
+                        <Button variant="secondary" block={true} onClick={removeAllModules}>Deseleccionar Todos <FaTrashAlt /></Button>
+                      </Col>
+                    </Row>
+                    <Row className="justify-content-center">
+                      <Col sm={12} md={12} lg={12}>
+                        <br/>
+                        <p>Hacer click en el botón enviar para guardar los cambios</p>
+                      </Col>
+                    </Row>
+                </Col>
+              </Row>
             </Col>
           )}
         </Row>
@@ -333,7 +334,7 @@ UserCreatePage.defaultProps = {
     messageErrors: [
       'Requerido*'
     ],
-    cols:"col-sm-6 col-md-6 col-lg-6 col-xs-6"
+    cols:"col-sm-12 col-md-12 col-lg-12 col-xs-12"
   },
 }
 

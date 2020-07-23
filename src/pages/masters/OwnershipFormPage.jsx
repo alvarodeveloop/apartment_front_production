@@ -682,12 +682,12 @@ const OwnershipFormPage = (props) => {
                 <input accept={props.config_ss ? props.config_ss.valid_format_documents : ''} type="file" id="input_document" style={{ display: 'none'}} onChange={onChangeFile} />
               </Col>
               <Col sm={4} md={4} lg={4}>
-                { nameFile ? nameFile : '' }
+                { nameFile !== 'null' && nameFile ? nameFile : '' }
               </Col>
             </Row>
             <Row>
               <Col sm={12} md={12} lg={12}>
-                {nameFile ? (
+                {nameFile !== 'null' && nameFile ? (
                   <React.Fragment>
                     <b>{data.file}</b>&nbsp;&nbsp;<Button size="sm" variant="danger" type="button" onClick={() => deleteFile(data.file)}><FaTrash /></Button>
                   </React.Fragment>

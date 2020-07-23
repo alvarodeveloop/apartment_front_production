@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom'
 import  'styles/AuthStyle.css'
 import { login,logout } from 'actions/auth'
 import { setOwnerships,cleanOwenerships } from 'actions/ownership'
+import { setHousing,removeHousing } from 'actions/housing'
 import { resetCart } from 'actions/cart'
 //import { MainLayout } from 'components/Layout'
 import Layout1 from 'shared/layouts/Layout1'
@@ -25,9 +26,16 @@ const MainContainer = props => {
             axios.get(API_URL+'menu_user'),
             axios.get(API_URL+'master_config_ss'),
           ]
+
           if(props.userState.id_rol == 5){
             promises.push(
               axios.get(API_URL+'ownership_by_user'),
+            )
+          }
+
+          if(props.userState.id_rol == 6){
+            promises.push(
+              axios.get(API_URL+'housing_complexe_by_user')
             )
           }
 
@@ -36,6 +44,9 @@ const MainContainer = props => {
             props.setConfig(result[1].data)
             if(props.userState.id_rol == 5){
               props.setOwnerships(result[2].data)
+            }
+            if(props.userState.id_rol == 6){
+              props.setHousing(result[2].data)
             }
           }).catch(err => {
             const { response } = err
@@ -55,6 +66,7 @@ const MainContainer = props => {
         props.removeMenu()
         props.removeConfig()
         props.cleanOwenerships()
+        props.removeHousing()
       }
 
     },[props.isLogin])
@@ -67,6 +79,7 @@ const MainContainer = props => {
       props.removeConfig()
       props.logout()
       props.cleanOwenerships()
+      props.removeHousing()
     }
 
     const logoutUserByTokenExpired = err => {
@@ -126,7 +139,9 @@ function mapDispatchToProps(){
       setConfig,
       removeConfig,
       setOwnerships,
-      cleanOwenerships
+      cleanOwenerships,
+      setHousing,
+      removeHousing
     }
 }
 

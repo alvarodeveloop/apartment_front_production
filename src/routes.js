@@ -278,6 +278,10 @@ export const routes = [
     component: lazy(() => import('./pages/ownerships/DownloadOwnershipPage'))
   },
   {
+    path: '/ownership/status_services',
+    component: lazy(() => import('./pages/ownerships/FailureManagePage'))
+  },
+  {
     path: '/ownership/request_service',
     component: lazy(() => import('./pages/ownerships/SolicitudeSSPage'))
   },
@@ -286,7 +290,23 @@ export const routes = [
     component: lazy(() => import('./pages/request_services/ManagementFailuresPropertyPage'))
   },
   {
-    path: '/ownership/status_services',
-    component: lazy(() => import('./pages/ownerships/FailureManagePage'))
+    path: '/housing/frequent_questions',
+    component: lazy(() => import('./pages/housing/FrequentQuestionPage'))
+  },
+  {
+    path: '/housing/asks',
+    component: lazy(() => import('./pages/housing/QueryPage'))
+  },
+  {
+    path: '/housing/downloads',
+    component: lazy(() => import('./pages/housing/DownloadOwnershipPage'))
+  },
+  {
+    path: '/housing/request_service',
+    component: lazy(() => import('./pages/housing/SolicitudeSSPage'))
+  },
+  {
+    path: '/housing/status_services',
+    component: lazy(() => import('./pages/housing/FailureManagePage'))
   },
 ]

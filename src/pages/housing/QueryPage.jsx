@@ -16,7 +16,7 @@ import InputFieldRef from 'components/input/InputComponentRef'
 import InputField from 'components/input/InputComponent'
 import { API_URL } from 'utils/constants'
 import { toast } from 'react-toastify'
-import DescriptionOwnershipComponent from 'components/DescriptionOwnershipComponent'
+import DescriptionHousingComponent from 'components/DescriptionHousingComponent'
 import * as moment from 'moment-timezone'
 import 'styles/pages/dashboard.css'
 
@@ -32,16 +32,13 @@ const QueryPage = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-    fetchData()
-  },[props.id_ownership_selected])
-
-  useEffect(() => {
     inputRef.current.focus()
     fetchData()
-  },[props.id_ownership_selected])
+  },[])
 
   const fetchData = () => {
-    axios.get(API_URL+'query_ownership/'+props.id_ownership_selected+"/"+props.ownership.id_user).then(result => {
+
+    axios.get(API_URL+'query_housing/'+props.housing.id_housing+"/"+props.housing.id_user).then(result => {
       setQueryData(result.data)
     }).catch(err => {
       if(err.response){
@@ -66,12 +63,13 @@ const QueryPage = (props) => {
     }
 
     let objectPost = Object.assign({},queryForm,{
-      id_ownership: props.id_ownership_selected,
-      id_user: props.ownership.id_user
+      id_housing: props.housing.id_housing,
+      id_user: props.housing.id_user
     })
+
     setDisableButton(true)
 
-    axios.post(API_URL+'query_ownership',objectPost).then(result => {
+    axios.post(API_URL+'query_housing',objectPost).then(result => {
       toast.success('Registro Creado')
       fetchData()
       clearForm()
@@ -98,7 +96,7 @@ const QueryPage = (props) => {
     <Container>
       <Row>
         <Col sm={12} md={12} lg={12}>
-          <DescriptionOwnershipComponent ownership={props.ownership} user={props.user} />
+          <DescriptionHousingComponent housing={props.housing} user={props.user} />
         </Col>
       </Row>
       <hr/>
@@ -181,8 +179,7 @@ const QueryPage = (props) => {
 function mapDispatchToProps(state){
 
   return {
-    id_ownership_selected: state.ownership.ownership_selected,
-    ownership : state.ownership.ownerships.find(v => v.id_ownership == state.ownership.ownership_selected),
+    housing : state.housing.housing,
     user: state.auth.user
   }
 }

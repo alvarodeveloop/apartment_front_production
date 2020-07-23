@@ -11,7 +11,7 @@ const AuthPageTemplate = props => {
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
-    id_rol: '',
+    id_rol: 1,
     rememberMe: false
   })
   const [validated, setValidated] = useState(false);

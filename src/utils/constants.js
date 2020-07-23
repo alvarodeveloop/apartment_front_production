@@ -150,7 +150,7 @@ export const ARRAY_COLORS = [
   "rgb(128, 135, 94)"
 ]
 
-export const API_URL = 'http://localhost:4000/'
-export const FRONT_URL = 'http://localhost:3000'
-//export const API_URL = 'https://postventa.veanx.tech:8000/'
-//export const FRONT_URL = 'https://postventa.veanx.tech'
+//export const API_URL = 'http://localhost:4000/'
+//export const FRONT_URL = 'http://localhost:3000'
+export const API_URL = 'https://postventa.veanx.tech:8000/'
+export const FRONT_URL = 'https://postventa.veanx.tech'

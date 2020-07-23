@@ -115,7 +115,7 @@ const ManagementSolicitudePropertyFormPage = (props) => {
     Promise.all(promises).then(result => {
 
       setData(result[0].data)
-      console.log(result[0].data,'aqui menor');
+      
       let form1Object = Object.assign({},form1,{
         id_priority: result[0].data.id_priority,
         id_status: result[0].data.id_status,
@@ -162,10 +162,10 @@ const ManagementSolicitudePropertyFormPage = (props) => {
           val = data.id
         break;
         case "crea":
-          val = data.client.name+' '+data.client.last_names
+          val = data.client ? data.client.name+' '+data.client.last_names : ''
         break;
         case "solicita":
-          val = data.client.name+' '+data.client.last_names
+          val = data.client ? data.client.name+' '+data.client.last_names : ''
         break;
         case "contactar":
           val = data.contact_to
@@ -177,10 +177,10 @@ const ManagementSolicitudePropertyFormPage = (props) => {
           val = data.housing.name
         break;
         case "propiedad":
-          val = data.ownership.number
+          val = data.ownership ? data.ownership.number : ''
         break;
         case "modelo":
-          val = data.ownership.models.name
+          val = data.ownership ? data.ownership.models.name : ''
         break;
         case "fecha_emision":
           val = moment(data.date_request).format('DD-MM-YYYY')

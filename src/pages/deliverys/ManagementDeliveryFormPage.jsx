@@ -87,6 +87,7 @@ const ManagementDeliveryFormPage = (props) => {
   const [isOpenModalFollowing,setIsOpenModalFollowing] = useState(false)
   const [isOpenModalAnulate,setIsOpenModalAnulate] = useState(false)
   const [isOpenModalCloseDelivery,setIsOpenModalCloseDelivery] = useState(false)
+  const [disabledButtons,setDisableButtons] = useState(false)
 
   useEffect(() => {
     if(props.config_ss && Object.keys(props.config_ss).length > 0){
@@ -666,12 +667,14 @@ const ManagementDeliveryFormPage = (props) => {
   }
 
   const print_acta = () => {
-
+    setDisableButtons(true)
     axios.get(API_URL+'delivery_print_acta/'+props.match.params.id,{
       responseType: 'blob'
     }).then(result => {
+      setDisableButtons(false)
       FileSaver.saveAs(result.data,'acta_entrega.pdf')
     }).catch(err => {
+      setDisableButtons(false)
       if(err.response){
         toast.error(err.response.data.message)
       }else{
@@ -682,11 +685,46 @@ const ManagementDeliveryFormPage = (props) => {
   }
 
   const print_observation = () => {
+    setDisableButtons(true)
     axios.get(API_URL+'delivery_print_observation/'+props.match.params.id,{
       responseType: 'blob'
     }).then(result => {
+      setDisableButtons(false)
       FileSaver.saveAs(result.data,'observaciones.pdf')
     }).catch(err => {
+      setDisableButtons(false)
+      if(err.response){
+        toast.error(err.response.data.message)
+      }else{
+        console.log(err);
+        toast.error('Error, contacte con soporte')
+      }
+    })
+  }
+
+  const send_observation = () => {
+    setDisableButtons(true)
+    axios.get(API_URL+'delivery_send_observation/'+props.match.params.id).then(result => {
+      setDisableButtons(false)
+      toast.success('Obseraciones Enviadas')
+    }).catch(err => {
+      setDisableButtons(false)
+      if(err.response){
+        toast.error(err.response.data.message)
+      }else{
+        console.log(err);
+        toast.error('Error, contacte con soporte')
+      }
+    })
+  }
+
+  const sendActa = () => {
+    setDisableButtons(true)
+    axios.get(API_URL+'delivery_send_acta/'+props.match.params.id).then(result => {
+      setDisableButtons(false)
+      toast.success('Acta entregada a los destinatarios')
+    }).catch(err => {
+      setDisableButtons(false)
       if(err.response){
         toast.error(err.response.data.message)
       }else{
@@ -1314,20 +1352,26 @@ const ManagementDeliveryFormPage = (props) => {
                 ) : data.id_status == 5 ? (
                   <Row className="justify-content-center">
                     <Col sm={2} md={2} lg={2}>
-                      <Button type="button" variant="secondary" block={true} size="sm">Enviar Acta</Button>
+                      <Button onClick={sendActa} disabled={disabledButtons} type="button" variant="secondary" block={true} size="sm">Enviar Acta</Button>
                     </Col>
                     <Col sm={2} md={2} lg={2}>
-                      <Button type="button" onClick={print_acta} variant="secondary" block={true} size="sm">Imprimir Acta</Button>
+                      <Button disabled={disabledButtons} type="button" onClick={print_acta} variant="secondary" block={true} size="sm">Imprimir Acta</Button>
                     </Col>
                     <Col sm={3} md={3} lg={3}>
-                      <Button type="submit" variant="secondary" block={true} size="sm">Enviar Observaciones</Button>
+                      <Button disabled={disabledButtons} type="button" variant="secondary" block={true} size="sm" onClick={send_observation}>Enviar Observaciones</Button>
                     </Col>
                     <Col sm={3} md={3} lg={3}>
-                      <Button type="button" variant="secondary" block={true} size="sm" onClick={print_observation}>Imprimir Observaciones</Button>
+                      <Button disabled={disabledButtons} type="button" variant="secondary" block={true} size="sm" onClick={print_observation}>Imprimir Observaciones</Button>
                     </Col>
                     <Col sm={2} md={2} lg={2}>
-                      <Button type="button" variant="danger" block={true} size="sm" onClick={goToTable}>Volver</Button>
+                      <Button disabled={disabledButtons} type="button" variant="danger" block={true} size="sm" onClick={goToTable}>Volver</Button>
                     </Col>
+                    {disabledButtons ? (
+                      <Col sm={12} md={12} lg={12}>
+                        <br/>
+                        <p className="alert alert-danger text-center">Realizando Operaciones...</p>
+                      </Col>
+                    ) : ''}
                   </Row>
                 ) : (
                   <Row className="justify-content-center">
@@ -1338,10 +1382,10 @@ const ManagementDeliveryFormPage = (props) => {
                       <Button type="button" onClick={openModalAnulate} variant="secondary" block={true} size="sm">Anular</Button>
                     </Col>
                     <Col sm={2} md={2} lg={2}>
-                      <Button type="submit" variant="secondary" block={true} size="sm">Guardar</Button>
+                      <Button disabled={disabledButtons} type="button" variant="secondary" block={true} size="sm" onClick={send_observation}>Enviar Observaciones</Button>
                     </Col>
                     <Col sm={2} md={2} lg={2}>
-                      <Button type="submit" variant="secondary" block={true} size="sm">Guardar</Button>
+                      <Button disabled={disabledButtons} type="button" variant="secondary" block={true} size="sm" onClick={print_observation}>Imprimir Observaciones</Button>
                     </Col>
                     <Col sm={2} md={2} lg={2}>
                       <Button type="button" variant="secondary" onClick={openModalCloseDelivery} block={true} size="sm">Cerrar Entrega</Button>
@@ -1394,6 +1438,42 @@ const ManagementDeliveryFormPage = (props) => {
           <Button variant="secondary" onClick={openModalFailure}>cerrar</Button>
         </Modal.Footer>
       </Modal>
+      {/* modal de los correos =====================
+      <Modal
+        show={isOpenModalEmail}
+        onHide={openModalEmail}
+        size="xl"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton className="header_dark" style={{ backgroundColor: 'black'}}>
+          <Modal.Title id="contained-modal-title-vcenter" style={{ color: 'white'}}>
+            Emails Receptores
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col sm={12} md={12} lg={12}>
+              <Row>
+                <InputField
+                  type="text"
+                  name="email_receptors"
+                  required={false}
+                  label="Correos de Confirmación separados por comas,  (sin dejar espacios en blanco)"
+                  handleChange={onChangeInputMailReceptors}
+                  value={mailReceptors}
+                  messageErrors={[]}
+                  cols="col-md-8 col-sm-8 col-lg-8"
+                />
+              </Row>
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={openModalEmail}>cerrar</Button>
+        </Modal.Footer>
+      </Modal>
+      { /* otras modales ================ */}
       <ModalFollowingTaskComponent
         show={isOpenModalFollowing}
         onHide={openModalFollowing}
@@ -1404,7 +1484,7 @@ const ManagementDeliveryFormPage = (props) => {
       show={isOpenModalAnulate}
       onHide={openModalAnulate}
       submit={handleSubmitAnulate}
-      title="Anular Seguimiento"
+      title="Anular Entrega"
     />
   <ModalCloseDeliveryComponent
       show={isOpenModalCloseDelivery}

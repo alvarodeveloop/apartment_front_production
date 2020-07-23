@@ -90,22 +90,26 @@ const ManagementSolicitudePropertySSPage = (props) => {
       },
       {
         Header: 'Depto.',
-        accessor: props1 => [props1.ownership.number],
+        accessor: props1 => props1.ownership ? [props1.ownership.number] : ['no posee'],
         Cell: props1 => {
           const original = props1.cell.row.original.ownership
-          const total = calculateDifferenceDaysBetweenDates(moment().tz('America/Santiago'),moment(original.date_inscription_conservative),'year')
-          if( total < 3){
-            return original.number
-          }else if(total >= 3 && total < 5){
-            return (<Badge variant="danger" className="font-badge">{original.number}</Badge>)
+          if(original){
+            const total = calculateDifferenceDaysBetweenDates(moment().tz('America/Santiago'),moment(original.date_inscription_conservative),'year')
+            if( total < 3){
+              return original.number
+            }else if(total >= 3 && total < 5){
+              return (<Badge variant="danger" className="font-badge">{original.number}</Badge>)
+            }else{
+              return (<Badge variant="dark" className="font-badge">{original.number}</Badge>)
+            }
           }else{
-            return (<Badge variant="dark" className="font-badge">{original.number}</Badge>)
+            return ''
           }
         }
       },
       {
         Header: 'Módelo',
-        accessor: props1 => [props1.ownership.models.name]
+        accessor: props1 => props1.ownership ? [props1.ownership.models.name] : ['no posee']
       },
       {
         Header: 'Prioridad',
@@ -161,7 +165,11 @@ const ManagementSolicitudePropertySSPage = (props) => {
           original.failures.forEach((v, i) => {
             total+= parseFloat(v.material_cost) + parseFloat(v.workforce_cost) + parseFloat(v.third_party_cost)
           });
-          return total
+          if(isNaN(total)){
+            return 0
+          }else{
+            return total
+          }
         }
       },
       {
