@@ -170,6 +170,10 @@ const BlockPage = (props) => {
   return (
     <Container>
       <Row className="containerDiv">
+        <Col sm={12} md={12} lg={12} xs={12} className="">
+          <h4 className="title_principal">Bloques</h4>
+          <hr/>
+        </Col>
         <Col sm={12} md={12} lg={12} xs={12} className="text-right">
           <span className="text-danger">*Campos Obligatorios</span>
           <br/><br/>

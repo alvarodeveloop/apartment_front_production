@@ -55,9 +55,11 @@ const PlanningPage = (props) => {
   return (
     <Container fluid>
       <Row className="containerDiv">
-        <Col sm={12} md={12} lg={12}>
-          <h4 className="title_principal text-center">Planificación de Tareas</h4>
+        <Col sm={12} md={12} lg={12} xs={12} className="">
+          <h4 className="title_principal">Planificación de Tareas</h4>
           <hr/>
+        </Col>
+        <Col sm={12} md={12} lg={12}>
           <Tabs defaultActiveKey="areas" id="uncontrolled-tab-example" variant="pills" className="nav nav-tabs nav-fill">
             <Tab eventKey="areas" title="Areas" key={'areas'}>
               <br/>

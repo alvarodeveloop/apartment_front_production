@@ -369,7 +369,9 @@ const HousingComplexesForm = (props) => {
     if(objectPost.id){
       axios.put(API_URL+'housing_complexe/'+objectPost.id,newFormData).then(result => {
         toast.success('Registro Modificado')
-        gotBackToTable()
+        setTimeout(function () {
+          gotBackToTable()
+        }, 1000);
       }).catch(err => {
         if(err.response){
           toast.error(err.response.data.message)

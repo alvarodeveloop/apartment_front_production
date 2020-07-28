@@ -33,6 +33,10 @@ const MantainerFailuresPage = (props) => {
   return (
     <Container fluid>
       <Row className="containerDiv">
+        <Col sm={12} md={12} lg={12} xs={12} className="">
+          <h4 className="title_principal">Mantenedor de Fallas</h4>
+          <hr/>
+        </Col>
         <Col sm={12} md={12} lg={12} xs={12}>
           <Row>
             <Col sm={6} md={6} lg={6}>

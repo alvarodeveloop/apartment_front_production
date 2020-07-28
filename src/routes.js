@@ -7,6 +7,7 @@ import Loader from './shared/Loader'
 //import Layout1 from './shared/layouts/Layout1'
 import MainContainer from './containers/MainContainer'
 import AuthContainer from './containers/AuthContainer'
+import AuthPasswordContainer from './containers/AuthPasswordContainer'
 
 // Lazy load component
 const lazy = (cb) => loadable(() => pMinDelay(cb(), 200), { fallback: <Loader /> })
@@ -31,6 +32,11 @@ export const defaultRoute = '/'
 
 
 export const routes = [
+  {
+    path: '/mail_recovery',
+    component: lazy(() => import('./containers/AuthPasswordContainer')),
+    layout: AuthPasswordContainer
+  },
   {
     path: '/',
     component: lazy(() => import('./containers/AuthContainer')),

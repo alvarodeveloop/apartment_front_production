@@ -109,6 +109,10 @@ const UserListPage = (props) => {
     <Container>
       <Row className="containerDiv">
         <Col sm={12} md={12} lg={12} xs={12} className="">
+          <h4 className="title_principal">Listado Usuarios</h4>
+          <hr/>
+        </Col>
+        <Col sm={12} md={12} lg={12} xs={12} className="">
           <div className="button-add">
             <Button title="Crear Usuario" onClick={goToForm} variant="success"><FaPlusCircle /></Button>
           </div>

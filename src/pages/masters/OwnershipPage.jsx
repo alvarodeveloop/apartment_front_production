@@ -37,7 +37,7 @@ const OwnershipPage = (props) => {
 
   useEffect(() => {
 
-    
+
     fetchData()
     inputRef.current.focus()
     return () => {
@@ -238,6 +238,10 @@ const OwnershipPage = (props) => {
   return (
     <Container fluid>
       <Row className="containerDiv">
+        <Col sm={12} md={12} lg={12} xs={12} className="">
+          <h4 className="title_principal">Propiedades</h4>
+          <hr/>
+        </Col>
         <Col sm={12} md={12} lg={12}>
           <Form onSubmit={handleSubmit}>
             <Row>

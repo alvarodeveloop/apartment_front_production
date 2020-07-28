@@ -39,7 +39,7 @@ const ManagementDeliveryTablePage = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-    
+
     fetchData()
   },[])
 
@@ -183,6 +183,10 @@ const ManagementDeliveryTablePage = (props) => {
   return (
     <Container fluid>
       <Row className="containerDiv">
+        <Col sm={12} md={12} lg={12} xs={12} className="">
+          <h4 className="title_principal">Gestión de Entregas</h4>
+          <hr/>
+        </Col>
         <Col sm={12} md={12} lg={12}>
           <Form onSubmit={onSubmit}>
             <Row>

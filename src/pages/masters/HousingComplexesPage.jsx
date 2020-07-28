@@ -231,6 +231,10 @@ const HousingComplexesPage = (props) => {
   return (
     <Container fluid>
       <Row className="containerDiv">
+        <Col sm={12} md={12} lg={12} xs={12} className="">
+          <h4 className="title_principal">Conjunto Habitacionales</h4>
+          <hr/>
+        </Col>
         <Col sm={12} md={12} lg={12}>
           <Row className="justify-content-center">
             <Col sm={4} md={4} lg={4}>

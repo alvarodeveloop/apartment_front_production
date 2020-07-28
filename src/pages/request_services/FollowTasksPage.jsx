@@ -52,7 +52,7 @@ const ManagementFailuresPropertyPage = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-    
+
     fetchData(true)
 
     return () => {
@@ -246,13 +246,11 @@ const ManagementFailuresPropertyPage = (props) => {
   return (
     <Container fluid={true}>
       <Row  className="containerDiv">
+        <Col sm={12} md={12} lg={12} xs={12} className="">
+          <h4 className="title_principal">Seguimiento de Tareas</h4>
+          <hr/>
+        </Col>
         <Col sm={12} md={12} lg={12}>
-          <Row className="">
-            <Col sm={12} md={12} lg={12}>
-              <h4 className="text-center title_principal">SEGUIMIENTO DE TAREAS</h4>
-              <hr/>
-            </Col>
-          </Row>
           <Row>
             <Col sm={12} md={12} lg={12}>
                 <Form onSubmit={handleSubmit} noValidate validated={validated}>

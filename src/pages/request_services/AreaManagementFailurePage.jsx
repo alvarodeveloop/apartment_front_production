@@ -59,7 +59,7 @@ const AreaManagementFailurePage = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-    
+
     fetchData(true)
     setTimeout(function () {
       inputRef.current.focus()

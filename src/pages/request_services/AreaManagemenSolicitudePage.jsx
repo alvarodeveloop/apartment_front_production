@@ -54,7 +54,7 @@ const AreaManagemenSolicitudePage = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-    
+
     fetchData()
     //inputRef.current.focus()
     return () => {
