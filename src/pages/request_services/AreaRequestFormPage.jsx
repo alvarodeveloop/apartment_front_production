@@ -597,7 +597,7 @@ const AreaRequestFormPage = (props) => {
               >
                 <option value="">--Seleccione--</option>
                 {precints.map((v,i) => (
-                  <option value={v.id} key={i}>{v.precint.name}</option>
+                  <option value={v.id_precint} key={i}>{v.precint.name}</option>
                 ))}
               </InputField>
               <InputField
