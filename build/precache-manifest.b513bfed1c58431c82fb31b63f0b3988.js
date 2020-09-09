@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "4943f47ff05d969193edbd3b0bfbfa93",
+    "revision": "fd7a544832e9ea56c42af96ee89f4007",
     "url": "https://postventa.veanx.tech/index.html"
   },
   {
@@ -40,11 +40,11 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "https://postventa.veanx.tech/static/css/22.1e40a1d5.chunk.css"
   },
   {
-    "revision": "745a6c56432a7cf495d5",
+    "revision": "935cd29b60b3ffb6f1a7",
     "url": "https://postventa.veanx.tech/static/css/24.7ea0b6f9.chunk.css"
   },
   {
-    "revision": "ce66d12f66e9f246d1ae",
+    "revision": "351b4819bd15a2856502",
     "url": "https://postventa.veanx.tech/static/css/25.7ea0b6f9.chunk.css"
   },
   {
@@ -280,12 +280,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "https://postventa.veanx.tech/static/js/23.5dba38d4.chunk.js"
   },
   {
-    "revision": "745a6c56432a7cf495d5",
-    "url": "https://postventa.veanx.tech/static/js/24.e24831b7.chunk.js"
+    "revision": "935cd29b60b3ffb6f1a7",
+    "url": "https://postventa.veanx.tech/static/js/24.302972c3.chunk.js"
   },
   {
-    "revision": "ce66d12f66e9f246d1ae",
-    "url": "https://postventa.veanx.tech/static/js/25.00b41c8f.chunk.js"
+    "revision": "351b4819bd15a2856502",
+    "url": "https://postventa.veanx.tech/static/js/25.3fa2b263.chunk.js"
   },
   {
     "revision": "d74581989aa356670488",
@@ -536,8 +536,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "https://postventa.veanx.tech/static/js/main.32b96c51.chunk.js"
   },
   {
-    "revision": "64cf55933b6f64257b09",
-    "url": "https://postventa.veanx.tech/static/js/runtime-main.1643f053.js"
+    "revision": "a0b8a74f8470e9ff858e",
+    "url": "https://postventa.veanx.tech/static/js/runtime-main.8e18cc1a.js"
   },
   {
     "revision": "c54eef50718560d1268aa8e92025972d",
