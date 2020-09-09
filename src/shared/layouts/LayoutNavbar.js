@@ -42,20 +42,22 @@ class LayoutNavbar extends Component {
         <Navbar.Toggle />
 
         <Navbar.Collapse>
-          <Nav className="align-items-lg-center">
-            {/* Search */}
-            <label className="nav-item navbar-text navbar-search-box p-0 active">
-              <i className="ion ion-ios-search navbar-icon align-middle"></i>
-              <span className="navbar-search-input pl-2">
-                <FormControl as="select" className="navbar-text mx-2" placeholder="Search..." style={{width: '200px'}} onChange={this.handleSelectChange}>
-                  {this.props.ownerships.map((v,i) => (
-                    <option key={i} value={v.ownership.id}>{v.ownership.number}</option>
-                  ))}
-                </FormControl>
-              </span>
-              Propiedades
-            </label>
-          </Nav>
+          {this.props.userConnect.id_rol == 5 || this.props.userConnect.id_rol == 5 ? (
+            <Nav className="align-items-lg-center">
+              {/* Search */}
+              <label className="nav-item navbar-text navbar-search-box p-0 active">
+                <i className="ion ion-ios-search navbar-icon align-middle"></i>
+                <span className="navbar-search-input pl-2">
+                  <FormControl as="select" className="navbar-text mx-2" placeholder="Search..." style={{width: '200px'}} onChange={this.handleSelectChange}>
+                    {this.props.ownerships.map((v,i) => (
+                      <option key={i} value={v.ownership.id}>{v.ownership.number}</option>
+                    ))}
+                  </FormControl>
+                </span>
+                Propiedades
+              </label>
+            </Nav>
+          ) : ''}
           <Nav className="align-items-lg-center ml-auto">
             <div className="nav-item d-none d-lg-block text-big font-weight-light line-height-1 opacity-25 mr-3 ml-1">|</div>
             <Nav.Item as="a" className="nav-item nav-link px-0 ml-2 ml-lg-0" href="#toggle" onClick={this.toggleSidenav}>

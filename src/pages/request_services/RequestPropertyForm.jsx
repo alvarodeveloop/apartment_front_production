@@ -14,6 +14,7 @@ import {
   FaRegCheckCircle,
   FaSave
 } from 'react-icons/fa'
+import layoutHelpers from 'shared/layouts/helpers'
 import 'styles/pages/requestPropertyForm.css'
 import 'styles/components/modalComponents.css'
 import InputField from 'components/input/InputComponent'
@@ -77,10 +78,13 @@ const RequestPropertyForm = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-
+    layoutHelpers.toggleCollapsed()
     fetchData()
     removeAllFailuresByIp()
     inputRef.current.focus()
+    return () => {
+      layoutHelpers.toggleCollapsed()
+    }
   },[])
 
   useMemo(() => {
@@ -204,10 +208,12 @@ const RequestPropertyForm = (props) => {
           setDataOwnership({
             date_delivery_onwership: moment(owner.date_delivery_ownership).format('DD-MM-YYYY'),
             date_inscription_conservate: moment(owner.date_inscription_conservative).format('DD-MM-YYYY'),
-            ownership: owner.ownership_client.name+''+owner.ownership_client.last_names,
+            ownership: owner.ownership_client.name+' '+owner.ownership_client.last_names,
             phone: owner.ownership_client.phone,
             email: owner.ownership_client.email,
           })
+          setData({...data, [e.target.name] : e.target.value, rut_request_person: owner.id_client_ownership })
+          setNameClientRequest(owner.ownership_client.name+' '+owner.ownership_client.last_names)
         }else{
           setDataOwnership({
             date_delivery_onwership:'',
@@ -216,8 +222,8 @@ const RequestPropertyForm = (props) => {
             phone:'',
             email:'',
           })
+          setData({...data, [e.target.name] : e.target.value})
         }
-        setData({...data, [e.target.name] : e.target.value})
       }else{
         setData({...data, [e.target.name] : e.target.value})
       }
@@ -513,28 +519,31 @@ const RequestPropertyForm = (props) => {
                   <option value={v.id} key={i}>{v.number}</option>
                 ))}
               </InputField>
-              <Col sm={3} md={3} lg={3}>
+            </Row>
+            <Row>
+              <Col sm={6} md={6} lg={6}>
                 <br/>
-                <b>Fecha Entrega Propietario:</b>&nbsp;
+                <b>Fecha Entrega Propietario:</b><br/>
                 {dataOwnership.date_delivery_onwership}
               </Col>
-              <Col sm={3} md={3} lg={3}>
+              <Col sm={6} md={6} lg={6}>
                 <br/>
-                <b>Fecha Inscripción Conservador:</b>&nbsp;
+                <b>Fecha Inscripción Conservador:</b><br/>
                 {dataOwnership.date_inscription_conservate}
               </Col>
             </Row>
+            <br/>
             <Row>
               <Col sm={4} md={4} lg={4}>
-                <b>Propietario:</b>&nbsp;
+                <b>Propietario:</b><br/>
                 {dataOwnership.ownership}
               </Col>
               <Col sm={4} md={4} lg={4}>
-                <b>Teléfono:</b>&nbsp;
+                <b>Teléfono:</b><br/>
                 {dataOwnership.phone_1}
               </Col>
               <Col sm={4} md={4} lg={4}>
-                <b>Mail:</b>&nbsp;
+                <b>Mail:</b><br/>
                 {dataOwnership.email}
               </Col>
             </Row>
@@ -594,31 +603,32 @@ const RequestPropertyForm = (props) => {
               <Col sm={1} md={1} lg={1}>
                 <label forHtml="martes">
                   <input id="martes" type="checkbox" value={2} checked={data.week_days.find(v => v == '2') ? true : false} onChange={onChange} name="week_days" />
-                  &nbsp;Martes
+                  <br/>Martes
                 </label>
               </Col>
               <Col sm={1} md={1} lg={1}>
                 <label forHtml="miercoles">
                   <input id="miercoles" type="checkbox" value={3} checked={data.week_days.find(v => v == '3') ? true : false} onChange={onChange} name="week_days" />
-                  &nbsp;Miercoles
+                  <br/>
+                  Miercoles
                 </label>
               </Col>
               <Col sm={1} md={1} lg={1}>
                 <label forHtml="jueves">
                   <input id="jueves" type="checkbox" value={4} checked={data.week_days.find(v => v == '4') ? true : false} onChange={onChange} name="week_days" />
-                  &nbsp;Jueves
+                  <br/>Jueves
                 </label>
               </Col>
               <Col sm={1} md={1} lg={1}>
                 <label forHtml="viernes">
                   <input id="viernes" type="checkbox" value={5} checked={data.week_days.find(v => v == '5') ? true : false} onChange={onChange} name="week_days" />
-                  &nbsp;Viernes
+                  <br/>Viernes
                 </label>
               </Col>
               <Col sm={1} md={1} lg={1}>
                 <label forHtml="sabado">
                   <input id="sabado" type="checkbox" value={6} checked={data.week_days.find(v => v == '6') ? true : false} onChange={onChange} name="week_days" />
-                  &nbsp;Sabado
+                  <br/>Sabado
                 </label>
               </Col>
               <Col sm={6} md={6} lg={6}>
@@ -836,11 +846,11 @@ RequestPropertyForm.defaultProps = {
     type: 'select',
     required: true,
     name: 'id_housing_complexe',
-    label : 'Proyecto:',
+    label : 'Proyecto o Conjunto Habitacional:',
     messageErrors: [
       'Requerido*'
     ],
-    cols:"col-sm-3 col-md-3 col-lg-3 col-xs-3"
+    cols:"col-sm-6 col-md-6 col-lg-6 col-xs-6"
   },
   inputOwnership:{
     type: 'select',
@@ -850,7 +860,7 @@ RequestPropertyForm.defaultProps = {
     messageErrors: [
       'Requerido*'
     ],
-    cols:"col-sm-3 col-md-3 col-lg-3 col-xs-3"
+    cols:"col-sm-6 col-md-6 col-lg-6 col-xs-6"
   },
   inputOrigin:{
     type: 'select',

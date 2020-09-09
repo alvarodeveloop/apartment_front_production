@@ -95,7 +95,7 @@ const OwnershipFormPage = (props) => {
     let promises = [
       axios.get(API_URL+'housing_complexe'),
       axios.get(API_URL+'master_block'),
-      axios.get(API_URL+'master_models'),
+      axios.get(API_URL+'params_model_property'),
       axios.get(API_URL+'type_ownership'),
       axios.get(API_URL+'client'),
     ]

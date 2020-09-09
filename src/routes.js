@@ -33,7 +33,7 @@ export const defaultRoute = '/'
 
 export const routes = [
   {
-    path: '/mail_recovery',
+    path: '/recovery_pass_form/:token',
     component: lazy(() => import('./containers/AuthPasswordContainer')),
     layout: AuthPasswordContainer
   },

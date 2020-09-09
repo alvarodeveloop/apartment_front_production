@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
-import AuthPageRecovery from 'pages/AuthPageRecovery'
+import AuthRecoveryPassForm from 'pages/AuthRecoveryPassForm'
 import  'styles/AuthStyle.css'
 import { login } from 'actions/auth'
 
@@ -15,7 +15,7 @@ class AuthPasswordContainer extends React.Component {
         {isLogin ? (
           <Redirect to="/dashboard" />
         ) : (
-          <AuthPageRecovery isLogin={isLogin} loginDispatch={this.props.login} {...this.props} />
+          <AuthRecoveryPassForm isLogin={isLogin} loginDispatch={this.props.login} {...this.props} />
         )}
       </div>
     )

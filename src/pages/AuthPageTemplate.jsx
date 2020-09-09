@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, Row,Col,Image } from 'react-bootstrap'
 import 'vendor/styles/pages/authentication.scss'
 import { ToastContainer, toast } from 'react-toastify'
 import axios from 'axios'
 import { API_URL } from 'utils/constants'
 import { setAuthorizationToken } from 'utils/functions'
-
+import {
+  FaTelegramPlane
+} from 'react-icons/fa'
 
 const AuthPageTemplate = props => {
   const [credentials, setCredentials] = useState({
@@ -15,7 +17,16 @@ const AuthPageTemplate = props => {
     rememberMe: false
   })
   const [validated, setValidated] = useState(false);
+  const [validatedRecovery, setValidatedRecovery] = useState(false);
+  const [isVisible, setIsvisible] = useState(false);
+  const [recoveryForm, setRecoveryForm] = useState({
+    email:''
+  })
+  const [sendMail, setSendMail] = useState(false)
 
+  const onChange = e => {
+    setRecoveryForm({...recoveryForm, [e.target.name] : e.target.value})
+  }
   const onValueChange = (field, e) => {
     setCredentials({...credentials,[field] : field === 'rememberMe' ? e.target.checked : e.target.value})
   }
@@ -49,6 +60,40 @@ const AuthPageTemplate = props => {
     })
   }
 
+  const displayRecovery = () => {
+    setIsvisible(!isVisible)
+  }
+
+  const submitRecoverPassword = e => {
+    const form = e.currentTarget;
+    e.preventDefault();
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      setValidatedRecovery(true);
+      toast.error('El email es requerido')
+      return
+    }
+
+    let objectPost = Object.assign({},recoveryForm)
+    setSendMail(true)
+
+    axios.post(API_URL+'auth_recovery_pass',objectPost).then(result => {
+      toast.success('Correo Enviado')
+      setRecoveryForm({
+        email: ''
+      })
+      setValidatedRecovery(false)
+      displayRecovery()
+      setSendMail(false)
+    }).catch(err => {
+      setSendMail(false)
+      if(err.response){
+        toast.error(err.response.data.message)
+      }else{
+        toast.error('Error, contacte con soporte')
+      }
+    })
+  }
 
     return (
       <div className="authentication-wrapper authentication-3">
@@ -87,42 +132,75 @@ const AuthPageTemplate = props => {
                 </div>
                 {/* / Logo */}
 
-                <h4 className="text-center text-lighter font-weight-normal mt-5 mb-0">Accede a tu Cuenta</h4>
-
                 {/* Form */}
-                <Form className="my-5" onSubmit={prevent} noValidate validated={validated}>
-                  <Form.Group>
-                    <Form.Label>Email o Rut</Form.Label>
-                    <Form.Control value={credentials.email} onChange={e => onValueChange('email', e)} />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label className="d-flex justify-content-between align-items-end">
-                      <div>Password</div>
-                      {/*<a href="#d" onClick={prevent} className="d-block small">Forgot password?</a>*/}
-                    </Form.Label>
-                    <Form.Control type="password" value={credentials.password} onChange={e => onValueChange('password', e)} />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label className="d-flex justify-content-between align-items-end">
-                      <div>Tipo de Usuario</div>
-                    </Form.Label>
-                    <Form.Control as="select" value={credentials.id_rol} onChange={e => onValueChange('id_rol', e)}>
-                      <option value=''>--Seleccione--</option>
-                      <option value={1}>Estandart</option>
-                      <option value={5}>Propietario</option>
-                      <option value={6}>Conjunto Habitacional</option>
-                    </Form.Control>
-                  </Form.Group>
+                {!isVisible ? (
 
-                  <div className="d-flex justify-content-center align-items-center m-0">
-                    <Button variant="primary" type="submit">Acceder</Button>
-                  </div>
-                </Form>
-                {/* / Form */}
+                  <React.Fragment>
+                    <h4 className="text-center text-lighter font-weight-normal mt-5 mb-0">Accede a tu Cuenta</h4>
+                    <Form className="my-5" onSubmit={prevent} noValidate validated={validated}>
+                      <Form.Group>
+                        <Form.Label>Email o Rut</Form.Label>
+                        <Form.Control value={credentials.email} onChange={e => onValueChange('email', e)} />
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label className="d-flex justify-content-between align-items-end">
+                          <div>Password</div>
+                          {/*<a href="#d" onClick={prevent} className="d-block small">Forgot password?</a>*/}
+                        </Form.Label>
+                        <Form.Control type="password" value={credentials.password} onChange={e => onValueChange('password', e)} />
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label className="d-flex justify-content-between align-items-end">
+                          <div>Tipo de Usuario</div>
+                        </Form.Label>
+                        <Form.Control as="select" value={credentials.id_rol} onChange={e => onValueChange('id_rol', e)}>
+                          <option value=''>--Seleccione--</option>
+                          <option value={1}>Estandart</option>
+                          <option value={5}>Propietario</option>
+                          <option value={6}>Conjunto Habitacional</option>
+                        </Form.Control>
+                      </Form.Group>
 
-                {/*<div className="text-center text-muted">
-                  Don't have an account yet? <a href="#d" onClick={prevent}>Sign Up</a>
-                </div>*/}
+                      <div className="d-flex justify-content-center align-items-center m-0">
+                        <Button variant="primary" type="submit">Enviar</Button>
+                      </div>
+                    </Form>
+
+                    <div className="text-center text-muted">
+                      Olvidate tu Contraseña? <a href="#d" onClick={displayRecovery}>Has click aquí</a>
+                    </div>
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    <h4 className="text-center text-lighter font-weight-normal mt-5 mb-0">Recuperar Contraseña</h4>
+
+                    {/* Form */}
+                    <Form className="my-5" onSubmit={submitRecoverPassword} noValidate validated={validatedRecovery}>
+                      <Form.Group>
+                        <Form.Label>Email (Recibira un correo de confirmación)</Form.Label>
+                        <Form.Control name="email" value={recoveryForm.email} onChange={onChange} />
+                      </Form.Group>
+                      {sendMail ? (
+                        <Row>
+                          <Col sm={12} lg={12} md={12} className="text-center">
+                            <Image src={require('../assets/img/loading.gif')} /><br/>
+                            Enviando...
+                          </Col>
+                        </Row>
+                      ) : (
+                        <div className="d-flex justify-content-center align-items-center m-0">
+                          <Button variant="primary" type="submit">Enviar <FaTelegramPlane /></Button>
+                        </div>
+                      )}
+                    </Form>
+                    {/* / Form */}
+                    <div className="text-center text-muted">
+                      <a href="#d" onClick={displayRecovery}>Volver al Login</a>
+                    </div>
+                  </React.Fragment>
+                )}
+
+
 
               </div>
             </div>
