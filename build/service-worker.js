@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "https://postventa.veanx.tech/precache-manifest.0d90c85cfb1589d1e87911e986be4a1a.js"
+  "https://postventa.veanx.tech/precache-manifest.1289ef1c404ec08db10fa17f6cab98d1.js"
 );
 
 self.addEventListener('message', (event) => {
