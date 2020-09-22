@@ -21,6 +21,7 @@ import { showPriceWithDecimals } from 'utils/functions'
 import { s2ab } from 'utils/functions'
 import { saveAs } from 'file-saver'
 import * as xlsx from 'xlsx'
+import layoutHelpers from 'shared/layouts/helpers'
 let columns_table = []
 
 const AreaManagementFailurePage = (props) => {
@@ -59,13 +60,14 @@ const AreaManagementFailurePage = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-
+    layoutHelpers.toggleCollapsed()
     fetchData(true)
     setTimeout(function () {
       inputRef.current.focus()
     }, 500);
     return () => {
       columns_table = []
+      layoutHelpers.toggleCollapsed()
     }
   },[])
 

@@ -8,7 +8,8 @@ import {
   Col,
   Button,
   DropdownButton,
-  Dropdown
+  Dropdown,
+  Badge
 } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import { API_URL } from 'utils/constants'
@@ -28,7 +29,7 @@ const UserListPage = (props) => {
 
   useMemo(() => {
 
-    if(userColumns.length > 3){
+    if(userColumns.length > 4){
       userColumns.pop()
     }
 
@@ -37,7 +38,7 @@ const UserListPage = (props) => {
       Cell: props => {
         const id = props.cell.row.original.id
         return(
-          <DropdownButton id={'drop'+props.cell.row.original.id} title="Seleccione"  block="true">
+          <DropdownButton id={'drop'+props.cell.row.original.id} title="Seleccione"  block="true" size="sm">
             <Dropdown.Item onClick={() => modifyRegister(id)}>Modificar</Dropdown.Item>
             <Dropdown.Item onClick={() => deleteRegister(id)}>Eliminar</Dropdown.Item>
           </DropdownButton>
@@ -112,10 +113,13 @@ const UserListPage = (props) => {
           <h4 className="title_principal">Listado Usuarios</h4>
           <hr/>
         </Col>
-        <Col sm={12} md={12} lg={12} xs={12} className="">
-          <div className="button-add">
-            <Button title="Crear Usuario" onClick={goToForm} variant="success"><FaPlusCircle /></Button>
-          </div>
+        <Col sm={6} md={6} lg={6} xs={6} className="">
+          <Button block={true} size="sm" onClick={goToForm} variant="success">Crear Usuario <FaPlusCircle /></Button>
+        </Col>
+        <Col sm={6} md={6} lg={6} xs={6} className="text-right">
+          <h4 className="title_principal">Total Usuarios: <Badge className="font_badge" variant="danger">{users.length}</Badge></h4>
+        </Col>
+        <Col sm={12} md={12} lg={12} xs={12}>
           <Table columns={userColumns} data={users} />
         </Col>
       </Row>

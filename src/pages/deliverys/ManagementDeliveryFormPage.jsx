@@ -13,7 +13,8 @@ import{
 import {
   FaPlusCircle,
   FaTrash,
-  FaRegCheckCircle
+  FaRegCheckCircle,
+  FaSearch
 } from 'react-icons/fa'
 import 'styles/pages/requestPropertyForm.css'
 import InputFieldRef from 'components/input/InputComponentRef'
@@ -29,6 +30,7 @@ import { following_columns } from 'utils/columns/followingColumns'
 import ModalAnulateDeliveryComponent from 'components/ModalAnulateDeliveryComponent'
 import ModalCloseDeliveryComponent from 'components/ModalCloseDeliveryComponent'
 import FileSaver from 'file-saver'
+import ClientFormComponent from 'components/ClientFormComponent'
 let failureColumns = []
 
 
@@ -88,6 +90,10 @@ const ManagementDeliveryFormPage = (props) => {
   const [isOpenModalAnulate,setIsOpenModalAnulate] = useState(false)
   const [isOpenModalCloseDelivery,setIsOpenModalCloseDelivery] = useState(false)
   const [disabledButtons,setDisableButtons] = useState(false)
+  const [isOpenModal,setIsOpenModal] = useState(false)
+  const [nameClientRequest, setNameClientRequest] = useState('')
+  const [clientData, setClientData] = useState([])
+  const [isCreateClient, setIsCreateClient] = useState(false)
 
   useEffect(() => {
     if(props.config_ss && Object.keys(props.config_ss).length > 0){
@@ -149,6 +155,7 @@ const ManagementDeliveryFormPage = (props) => {
       if(err.response){
         toast.error(err.response.data.message)
       }else{
+        console.log(err);
         toast.error('Error, contacte con soporte')
       }
     })
@@ -166,6 +173,7 @@ const ManagementDeliveryFormPage = (props) => {
         axios.get(API_URL+'master_precint'),
         axios.get(API_URL+'params_manage_problems_tipology_by_type/'+1),
         axios.get(API_URL+'params_manage_problems_related_failures'),
+        axios.get(API_URL+'client'),
       ]
     }
 
@@ -182,36 +190,36 @@ const ManagementDeliveryFormPage = (props) => {
         setPrecints(result[2].data)
         setTipologyFailures(result[3].data)
         setRelatedFailures(result[4].data)
-
+        setClientData(result[5].data)
         if(props.match.params.id){
           setData({
-            id_housing_complexe: result[5].data.id_housing_complexe,
-            id_ownership: result[5].data.id_ownership,
-            date_request: moment(result[5].data.date_request).format('YYYY-MM-DD'),
-            rut_ownership_client: result[5].data.rut_ownership_client,
-            rut_deputy: result[5].data.rut_deputy,
-            name_deputy: result[5].data.name_deputy,
-            id_city: result[5].data.id_city,
-            parkings: result[5].data.parkings.filter(v => v.type == 2).map(v => v.name),
-            cellars: result[5].data.parkings.filter(v => v.type == 1).map(v => v.name),
-            name_file: result[5].data.name_file,
+            id_housing_complexe: result[6].data.id_housing_complexe,
+            id_ownership: result[6].data.id_ownership,
+            date_request: moment(result[6].data.date_request).format('YYYY-MM-DD'),
+            rut_ownership_client: result[6].data.rut_ownership_client,
+            rut_deputy: result[6].data.rut_deputy,
+            name_deputy: result[6].data.name_deputy,
+            id_city: result[6].data.id_city,
+            parkings: result[6].data.parkings.filter(v => v.type == 2).map(v => v.name),
+            cellars: result[6].data.parkings.filter(v => v.type == 1).map(v => v.name),
+            name_file: result[6].data.name_file,
             file: null,
-            date_v_b_client: result[5].data.date_v_b_client ? moment(result[5].data.date_v_b_client).format('YYYY-MM-DD') : '',
-            date_solution_observation: result[5].data.date_solution_observation ? moment(result[5].data.date_solution_observation).format('YYYY-MM-DD') : '',
-            number_electricity: result[5].data.number_electricity,
-            reading_electricity: result[5].data.reading_electricity,
-            number_water: result[5].data.number_water,
-            reading_water: result[5].data.reading_water,
-            number_gas: result[5].data.number_gas,
-            reading_gas: result[5].data.reading_gas,
-            date_delivery_key: result[5].data.date_delivery_key ? moment(result[5].data.date_delivery_key).format('YYYY-MM-DD') : '',
-            note: result[5].data.note,
-            date_close_delivery: result[5].data.date_close_delivery ? moment(result[5].data.date_close_delivery).format('YYYY-MM-DD') : '',
-            id: result[5].data.id,
-            id_status: result[5].data.id_status,
-            reason_anulate: result[5].data.reason_anulate
+            date_v_b_client: result[6].data.date_v_b_client ? moment(result[6].data.date_v_b_client).format('YYYY-MM-DD') : '',
+            date_solution_observation: result[6].data.date_solution_observation ? moment(result[6].data.date_solution_observation).format('YYYY-MM-DD') : '',
+            number_electricity: result[6].data.number_electricity,
+            reading_electricity: result[6].data.reading_electricity,
+            number_water: result[6].data.number_water,
+            reading_water: result[6].data.reading_water,
+            number_gas: result[6].data.number_gas,
+            reading_gas: result[6].data.reading_gas,
+            date_delivery_key: result[6].data.date_delivery_key ? moment(result[6].data.date_delivery_key).format('YYYY-MM-DD') : '',
+            note: result[6].data.note,
+            date_close_delivery: result[6].data.date_close_delivery ? moment(result[6].data.date_close_delivery).format('YYYY-MM-DD') : '',
+            id: result[6].data.id,
+            id_status: result[6].data.id_status,
+            reason_anulate: result[6].data.reason_anulate
           })
-          setRegisterUpdate(result[5].data)
+          setRegisterUpdate(result[6].data)
 
           setOnlyRead(true)
         }
@@ -255,6 +263,7 @@ const ManagementDeliveryFormPage = (props) => {
       if(err.response){
         toast.error(err.response.data.message)
       }else{
+        console.log(err);
         toast.error('Error, contacte con soporte')
       }
     })
@@ -268,6 +277,7 @@ const ManagementDeliveryFormPage = (props) => {
       if(err.response){
         toast.error(err.response.data.message)
       }else{
+        console.log(err);
         toast.error('Error, contacte con soporte')
       }
     })
@@ -284,6 +294,7 @@ const ManagementDeliveryFormPage = (props) => {
       if(err.response){
         toast.error(err.response.data.message)
       }else{
+        console.log(err);
         toast.error('Error, contacte con soporte')
       }
     })
@@ -377,6 +388,7 @@ const ManagementDeliveryFormPage = (props) => {
       if(err.response){
         toast.error(err.response.data.message)
       }else{
+        console.log(err);
         toast.error('Error, contacte con soporte')
       }
     })
@@ -434,6 +446,7 @@ const ManagementDeliveryFormPage = (props) => {
         if(err.response){
           toast.error(err.response.data.message)
         }else{
+          console.log(err);
           toast.error('Error, contacte con soporte')
         }
       })
@@ -447,6 +460,7 @@ const ManagementDeliveryFormPage = (props) => {
         if(err.response){
           toast.error(err.response.data.message)
         }else{
+          console.log(err);
           toast.error('Error, contacte con soporte')
         }
       })
@@ -490,6 +504,9 @@ const ManagementDeliveryFormPage = (props) => {
   const displayOwnershipProperty = id_ownership => {
     let owner = ownerships.find(v => v.id == id_ownership)
     setOwnershipSelected(owner)
+    if(owner.ownership_client){
+      setNameClientRequest(owner.ownership_client.name+' '+owner.ownership_client.last_names)
+    }
     setData({...data, id_ownership, rut_ownership_client: owner.id_client_ownership})
   }
 
@@ -539,6 +556,7 @@ const ManagementDeliveryFormPage = (props) => {
         if(err.response){
           toast.error(err.response.data.message)
         }else{
+          console.log(err);
           toast.error('Error, contacte con soporte')
         }
       })
@@ -550,6 +568,7 @@ const ManagementDeliveryFormPage = (props) => {
         if(err.response){
           toast.error(err.response.data.message)
         }else{
+          console.log(err);
           toast.error('Error, contacte con soporte')
         }
       })
@@ -588,6 +607,7 @@ const ManagementDeliveryFormPage = (props) => {
         if(err.response){
           toast.error(err.response.data.message)
         }else{
+          console.log(err);
           toast.error('Error, contacte con soporte')
         }
       })
@@ -734,6 +754,23 @@ const ManagementDeliveryFormPage = (props) => {
     })
   }
 
+  const openModalClient = () => {
+    setIsOpenModal(!isOpenModal)
+  }
+
+  const handleShowClientForm = (submit = false) => {
+    if(submit){
+      fetchData()
+    }
+    setIsCreateClient(!isCreateClient)
+  }
+
+  const clientSelected = dataClient => {
+    setData({...data, rut_ownership_client: dataClient.rut})
+    setNameClientRequest(dataClient.name+' '+dataClient.last_names)
+    setIsOpenModal(false)
+  }
+
   return (
     <Container fluid>
       <Row className="containerDiv">
@@ -878,15 +915,26 @@ const ManagementDeliveryFormPage = (props) => {
                   />
                 </Row>
                 {Object.keys(ownershipSelected).length > 0 ? (
-                  <Row>
-                    <Col sm={12} md={12} lg={12}>
-                      <h6 style={{ borderBottom: '1px solid black'}}>{ownershipSelected.ownership_client.name+' '+ownershipSelected.ownership_client.last_names}</h6>
-                    </Col>
-                  </Row>
+                  <>
+                    <Row>
+                      <Col sm={12} md={12} lg={12}>
+                        <b>Nombre Cliente:</b>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col sm={12} md={12} lg={12}>
+                        <br/>
+                        <h6 style={{ borderBottom: '1px solid black'}}>{nameClientRequest}</h6>
+                      </Col>
+                    </Row>
+                  </>
                 ) : ''}
 
               </Col>
               <Col sm={3} md={3} lg={3}>
+                <br/>
+                <Button variant="secondary" onClick={openModalClient}><FaSearch/></Button>
+                <br/><br/>
                 {Object.keys(ownershipSelected).length > 0 ? (
                   <React.Fragment>
                     <Row>
@@ -1436,6 +1484,70 @@ const ManagementDeliveryFormPage = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={openModalFailure}>cerrar</Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={isOpenModal}
+        onHide={openModalClient}
+        size="xl"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton className="header_dark">
+          <Modal.Title id="contained-modal-title-vcenter">
+            Clientes registrados
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            {
+              isCreateClient ? (
+                <Col sm={12} md={12} lg={12}>
+                  <ClientFormComponent isModal={true} showTable={handleShowClientForm} {...props} />
+                </Col>
+              ) : (
+                <Col sm={12} md={12} lg={12}>
+                  <Row className="justify-content-center">
+                    <Col sm={4} md={4} lg={4} xs={6}>
+                      <Button variant="secondary" block={true} onClick={handleShowClientForm}>Crear Cliente <FaPlusCircle /></Button>
+                    </Col>
+                  </Row>
+                  <br/>
+                  <Row>
+                    <Col sm={12} md={12} lg={12}>
+                      <Table columns={[
+                        {
+                          Header : 'Rut',
+                          accessor: 'rut',
+                          Cell: props1 => {
+                            const { original } = props1.cell.row
+                            return(
+                              <Button variant="link" onClick={() => { clientSelected(original) } }>{original.rut}</Button>
+                            )
+                          }
+                        },
+                        {
+                          Header : 'Nombre',
+                          accessor: props1 => [props1.name+' '+props1.last_names],
+                        },
+                        {
+                          Header : 'Dirección',
+                          accessor: 'address',
+                        },
+                        {
+                          Header : 'Email',
+                          accessor: 'email',
+                        }
+                      ]} data={clientData} />
+                    </Col>
+                  </Row>
+                </Col>
+              )
+            }
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={openModalClient}>cerrar</Button>
         </Modal.Footer>
       </Modal>
       {/* modal de los correos =====================

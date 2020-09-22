@@ -24,7 +24,8 @@ const UserCreatePage  = props => {
     email: "",
     rut: "",
     password: "",
-    id_rol: ""
+    id_rol: "",
+    id_personal: ""
   })
   const [modulesUser,setModulesUser] = useState([])
   const [roles,setRoles] = useState([])
@@ -32,12 +33,15 @@ const UserCreatePage  = props => {
   const [validated, setValidated] = useState(false);
   const [isFormClean, setIsFormClean] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
+  const [personal, setPersonal] = useState([]);
+
 
   const fetchModules = () => {
 
     let promises = [
       axios.get(API_URL+'modules'),
       axios.get(API_URL+'roles'),
+      axios.get(API_URL+'personal_enterprise'),
     ]
 
     if(props.match.params.id > 0){
@@ -49,16 +53,17 @@ const UserCreatePage  = props => {
     Promise.all(promises).then(result => {
       setModules(result[0].data)
       setRoles(result[1].data)
-
+      setPersonal(result[2].data)
       if(props.match.params.id){
         setUserData({
-          name: result[2].data.user.name,
-          email: result[2].data.user.email,
-          rut: result[2].data.user.rut,
+          name: result[3].data.user.name,
+          email: result[3].data.user.email,
+          rut: result[3].data.user.rut,
           password: "",
-          id_rol: result[2].data.user.id_rol
+          id_rol: result[3].data.user.id_rol,
+          id_personal: result[3].data.user.id_personal,
         })
-        const userModules = result[2].data.modules.map(v => v.id_menu)
+        const userModules = result[3].data.modules.map(v => v.id_menu)
         setModulesUser(userModules)
         setIsUpdate(true)
       }
@@ -72,7 +77,15 @@ const UserCreatePage  = props => {
   },[])
 
   const onChange = e => {
-    setUserData({ ...userData, [e.target.name] : e.target.value })
+    if(e.target.name === 'rut'){
+      let val = e.target.value
+      val = val ? val.split('-').join('') : val
+      val = val ? val.substring(0,val.length -1) +'-'+val.substring(val.length -1) : val
+      setUserData({ ...userData, [e.target.name] : val })
+    }else{
+      setUserData({ ...userData, [e.target.name] : e.target.value })
+    }
+
   }
 
   const handleAccess = async (e,id) => {
@@ -166,13 +179,9 @@ const UserCreatePage  = props => {
   const renderMenuNew = async type => {
     const menu = await axios.get(API_URL+'menu_user')
     props.setMenu(menu.data)
-    if(type){
-      setTimeout(() => {
-        props.history.push('/user/list')
-      },1000)
-    }else{
-      cleanForm()
-    }
+    setTimeout(() => {
+      goToListUser()
+    },1000)
   }
 
   return(
@@ -218,22 +227,39 @@ const UserCreatePage  = props => {
                   <option key={i} value={v.id}>{v.name_role}</option>
                 ))}
               </InputField>
+              <InputField
+               type='select'
+               label='Personal Postventa'
+               name='id_personal'
+               required={true}
+               messageErrors={[
+               'Requerido*'
+               ]}
+               cols='col-md-6 col-lg-6 col-sm-6'
+               value={userData.id_personal}
+               handleChange={onChange}
+               >
+               <option value="">--Seleccione--</option>
+               {personal.map((v,i) => (
+                 <option value={v.id} key={i}>{v.name+" "+v.last_names}</option>
+               ))}
+              </InputField>
             </Row>
             {isFormClean ? (
               <Row>
                 <Col sm={6} md={6} lg={6} xs={6}>
-                  <Button type="button" variant="primary" block onClick={() => setIsFormClean(false)}>Registrar Otro <FaPlusCircle /></Button>
+                  <Button size="sm" type="button" variant="primary" block onClick={() => setIsFormClean(false)}>Registrar Otro <FaPlusCircle /></Button>
                 </Col>
                 <Col sm={6} md={6} lg={6} xs={6}>
-                  <Button type="button" variant="warning" block onClick={goToListUser}>Ir al listado <FaUsers /></Button>
+                  <Button size="sm" type="button" variant="warning" block onClick={goToListUser}>Ir al listado <FaUsers /></Button>
                 </Col>
               </Row>
             ) : (
               <Row>
                 <Col sm={12} md={12} lg={12} xs={12} className="text-center">
-                  <Button type="submit" variant="secondary" block>Enviar <FaPlusCircle /></Button>
+                  <Button size="sm" type="submit" variant="secondary" block>Enviar <FaPlusCircle /></Button>
                     o
-                  <Button onClick={goToListUser} type="button" variant="primary" block>Ir al Listado</Button>
+                  <Button size="sm" onClick={goToListUser} type="button" variant="primary" block>Ir al Listado</Button>
                 </Col>
               </Row>
             )}
@@ -263,10 +289,10 @@ const UserCreatePage  = props => {
                 <Col sm={12} md={12} lg={12}>
                     <Row>
                       <Col sm={6} md={6} lg={6} xs={12}>
-                        <Button variant="secondary" block={true} onClick={addAllModules}>Seleccionar Todos <FaCheckCircle /></Button>
+                        <Button size="sm" variant="secondary" block={true} onClick={addAllModules}>Seleccionar Todos <FaCheckCircle /></Button>
                       </Col>
                       <Col sm={6} md={6} lg={6} xs={12}>
-                        <Button variant="secondary" block={true} onClick={removeAllModules}>Deseleccionar Todos <FaTrashAlt /></Button>
+                        <Button size="sm" variant="secondary" block={true} onClick={removeAllModules}>Deseleccionar Todos <FaTrashAlt /></Button>
                       </Col>
                     </Row>
                     <Row className="justify-content-center">
@@ -334,7 +360,7 @@ UserCreatePage.defaultProps = {
     messageErrors: [
       'Requerido*'
     ],
-    cols:"col-sm-12 col-md-12 col-lg-12 col-xs-12"
+    cols:"col-sm-6 col-md-6 col-lg-6 col-xs-12"
   },
 }
 

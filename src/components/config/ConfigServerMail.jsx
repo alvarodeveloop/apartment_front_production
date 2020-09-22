@@ -36,6 +36,7 @@ const ConfigServerMail = (props) => {
   const fetchData = () => {
     axios.get(API_URL+'master_config_server_mail').then(result => {
       if(result.data){
+        console.log(result.data,'aqui menor');
         setData({
           host: result.data.host,
           port: result.data.port,
@@ -126,7 +127,7 @@ const ConfigServerMail = (props) => {
           <Row>
             <InputField
               {...props.inputUsername}
-              value={data.size_format_documents}
+              value={data.username}
               handleChange={onChange}
             />
             <InputField

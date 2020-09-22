@@ -32,6 +32,7 @@ import Table from 'components/Table'
 import * as moment from 'moment-timezone'
 import { following_columns } from 'utils/columns/followingColumns'
 import ManagementSolicitudeFailureFormComponent from 'components/ManagementSolicitudeFailureFormComponent'
+import layoutHelpers from 'shared/layouts/helpers'
 import FileSaver from 'file-saver'
 
 
@@ -76,9 +77,12 @@ const AreaFormSolicitudePage = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-    
+    layoutHelpers.toggleCollapsed()
     fetchData(true)
     inputRef.current.focus()
+    return () => {
+      layoutHelpers.toggleCollapsed()
+    }
   },[])
 
   const searchDateForm1 = datos => {

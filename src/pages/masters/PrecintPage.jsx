@@ -57,7 +57,7 @@ const PrecintPage = (props) => {
           accessor: props1 => props1.models ?  [props1.models.name] : []
         },
         {
-          Header : 'Familia',
+          Header : 'Categoria',
           accessor: props1 => [props1.families.name]
         },
         {

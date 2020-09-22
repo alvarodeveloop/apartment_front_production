@@ -62,7 +62,12 @@ const EnterpriseFormPage = (props) => {
   }
 
   const onChange = e => {
-    if(e.target.name === 'is_active'){
+    if(e.target.name === 'rut'){
+      let val = e.target.value
+      val = val ? val.split('-').join('') : val
+      val = val ? val.substring(0,val.length -1) +'-'+val.substring(val.length -1) : val
+      setData({...data, [e.target.name]: val})
+    }else if(e.target.name === 'is_active'){
       setData({...data, [e.target.name]: e.target.checked})
     }else{
       setData({...data, [e.target.name]: e.target.value})
@@ -96,7 +101,7 @@ const EnterpriseFormPage = (props) => {
     }else{
       axios.post(API_URL+'enterprise',objectPost).then(result => {
         toast.success('Registro Creado')
-        clearForm()
+        gotBackToTable()
       }).catch(err => {
         if(err.response){
           toast.error(err.response.data.message)

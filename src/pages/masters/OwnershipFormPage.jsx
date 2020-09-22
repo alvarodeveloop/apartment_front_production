@@ -342,17 +342,22 @@ const OwnershipFormPage = (props) => {
   }
 
   const deleteFile = file => {
-    axios.delete(API_URL+'masters_ownership_destroy_file/'+file+'/'+data.id).then(result => {
-      toast.success('Archivo eliminado')
-      setData({...data, file: ''})
-    }).catch(err => {
-      if(err.response){
-        toast.error(err.response.data.message)
-      }else{
-        console.log(err);
-        toast.error('Error, contacte con soporte')
-      }
-    })
+    if(data.file){
+      axios.delete(API_URL+'masters_ownership_destroy_file/'+file+'/'+data.id).then(result => {
+        toast.success('Archivo eliminado')
+        setData({...data, file: ''})
+      }).catch(err => {
+        if(err.response){
+          toast.error(err.response.data.message)
+        }else{
+          console.log(err);
+          toast.error('Error, contacte con soporte')
+        }
+      })
+    }else{
+      setDocumentUpload(null)
+      setNameFile(null)
+    }
   }
 
   return (
@@ -682,12 +687,16 @@ const OwnershipFormPage = (props) => {
                 <input accept={props.config_ss ? props.config_ss.valid_format_documents : ''} type="file" id="input_document" style={{ display: 'none'}} onChange={onChangeFile} />
               </Col>
               <Col sm={4} md={4} lg={4}>
-                { nameFile !== 'null' && nameFile ? nameFile : '' }
+                { nameFile !== 'null' && nameFile ? (
+                  <React.Fragment>
+                    {nameFile}&nbsp;&nbsp;<Button size="sm" variant="danger" type="button" onClick={() => deleteFile(nameFile)}><FaTrash /></Button>
+                  </React.Fragment>
+                ): '' }
               </Col>
             </Row>
             <Row>
               <Col sm={12} md={12} lg={12}>
-                {nameFile !== 'null' && nameFile ? (
+                {nameFile !== 'null' && nameFile && data.file ? (
                   <React.Fragment>
                     <b>{data.file}</b>&nbsp;&nbsp;<Button size="sm" variant="danger" type="button" onClick={() => deleteFile(data.file)}><FaTrash /></Button>
                   </React.Fragment>
@@ -759,7 +768,7 @@ const OwnershipFormPage = (props) => {
                           accessor: 'email',
                         }
                       ]} data={clientData} />
-                    </Col>
+                  </Col>
                   </Row>
                 </Col>
               )

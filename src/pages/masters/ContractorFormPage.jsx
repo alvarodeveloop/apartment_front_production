@@ -101,7 +101,7 @@ const ContractorFormPage = (props) => {
     }else{
       axios.post(API_URL+'master_contractor',objectPost).then(result => {
         toast.success('Registro Creado')
-        clearForm()
+        gotBackToTable()
       }).catch(err => {
         if(err.response){
           toast.error(err.response.data.message)
@@ -177,7 +177,7 @@ const ContractorFormPage = (props) => {
             </Row>
             <Row>
               <Form.Group className="col-md-6 col-sm-6 col-lg-6 col-6">
-                <Form.Label style={{fontWeight: 'bold'}} for="is_active">Empresa Activa?</Form.Label>
+                <Form.Label style={{fontWeight: 'bold'}} for="is_active">Contratista Activa?</Form.Label>
                 <br/>
                 <input type="checkbox" id="is_active" name="is_active" checked={data.is_active} onChange={onChange} value={data.is_active} />
               </Form.Group>

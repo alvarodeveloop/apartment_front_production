@@ -32,7 +32,7 @@ const PrecintFormPage = (props) => {
 
   const inputRef = useRef(null)
   useEffect(() => {
-    
+
     fetchData()
     inputRef.current.focus()
   },[])
@@ -124,7 +124,7 @@ const PrecintFormPage = (props) => {
   }
 
   const gotBackToTable = () => {
-    props.history.replace('/masters/precint')
+    props.history.replace('/masters/enclosure')
   }
 
   const clearForm = () => {
@@ -252,7 +252,7 @@ PrecintFormPage.defaultProps = {
     type: 'select',
     required: true,
     name: 'id_family',
-    label : 'Familia',
+    label : 'Categoria',
     messageErrors: [
       'Requerido*'
     ],

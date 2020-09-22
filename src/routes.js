@@ -95,7 +95,7 @@ export const routes = [
     component: lazy(() => import('./pages/masters/PrecintFormPage'))
   },{
     path: '/masters/precint',
-    component: lazy(() => import('./pages/masters/PrecintPage'))
+    component: lazy(() => import('./pages/masters/EnclosurePage'))
   },
   {
     path: '/request/planning',
@@ -200,7 +200,7 @@ export const routes = [
   },
   {
     path: '/masters/enclosure',
-    component: lazy(() => import('./pages/masters/EnclosurePage'))
+    component: lazy(() => import('./pages/masters/PrecintPage'))
   },
   {
     path: '/dashboard',

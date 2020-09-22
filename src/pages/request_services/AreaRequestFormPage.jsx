@@ -24,6 +24,7 @@ import { API_URL } from 'utils/constants'
 import axios from 'axios'
 import ClientFormComponent from 'components/ClientFormComponent'
 import * as moment from 'moment-timezone'
+import layoutHelpers from 'shared/layouts/helpers'
 let client_columns = []
 let failureColumns = []
 
@@ -75,10 +76,13 @@ const AreaRequestFormPage = (props) => {
   const inputRef = useRef(null)
 
   useEffect(() => {
-
+    layoutHelpers.toggleCollapsed()
     fetchData()
     removeAllFailuresByIp()
     inputRef.current.focus()
+    return () => {
+      layoutHelpers.toggleCollapsed()
+    }
   },[])
 
   useMemo(() => {
@@ -343,6 +347,7 @@ const AreaRequestFormPage = (props) => {
   const getFailures = () => {
     if(props.match.params.id){
       axios.get(API_URL+'area_failure_ss_by_id_area_ss/'+props.match.params.id).then(result => {
+        console.log(result.data,'aqui matonsito');
         setFailureData(result.data)
       }).catch(err => {
         if(err.response){
