@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a51b096b32609cf2cbfaa76073b7dd36",
+    "revision": "c1bbcbfdb7b530f11e0962a5f25fd4d4",
     "url": "https://postventa.veanx.tech/index.html"
   },
   {
@@ -204,7 +204,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "https://postventa.veanx.tech/static/css/9.07b7d53c.chunk.css"
   },
   {
-    "revision": "888a152dfaefe86c356e",
+    "revision": "17e5414fcd7544055267",
     "url": "https://postventa.veanx.tech/static/css/main.6f5a9482.chunk.css"
   },
   {
@@ -528,8 +528,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "https://postventa.veanx.tech/static/js/9.57f10357.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "888a152dfaefe86c356e",
-    "url": "https://postventa.veanx.tech/static/js/main.69a99ee4.chunk.js"
+    "revision": "17e5414fcd7544055267",
+    "url": "https://postventa.veanx.tech/static/js/main.5521a989.chunk.js"
   },
   {
     "revision": "c957a3803cddf01369fe",
