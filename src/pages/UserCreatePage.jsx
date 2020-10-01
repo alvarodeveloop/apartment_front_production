@@ -231,7 +231,7 @@ const UserCreatePage  = props => {
                type='select'
                label='Personal Postventa'
                name='id_personal'
-               required={true}
+               required={false}
                messageErrors={[
                'Requerido*'
                ]}
