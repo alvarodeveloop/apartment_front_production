@@ -1,79 +1,87 @@
-import React, { useMemo, useState , useEffect, useRef } from 'react'
+import React, { useEffect , useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import{
+import {
   Container,
   Row,
   Col,
   Button,
   Form,
-  DropdownButton,
-  Dropdown
+  Dropdown,
+  DropdownButton
 } from 'react-bootstrap'
+import {
+  FaPlusCircle
+} from 'react-icons/fa'
 import Table from 'components/Table'
-import axios from 'axios'
-import InputFieldRef from 'components/input/InputComponentRef'
-import { API_URL } from 'utils/constants'
-import { toast } from 'react-toastify'
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-
-let enclosure_columns = []
+import axios from 'axios'
+import { toast } from 'react-toastify';
+import { API_URL } from 'utils/constants'
+let precint_columns = []
 
 const EnclosurePage = (props) => {
 
-  const [validated, setValidated] = useState(false)
-  const [enclosures, setEnclosures] = useState([])
-  const [enclosureForm, setEnclosureForm] = useState({
-    name: '',
-    state: true
-  })
-
-  const inputRef = useRef(null)
+  const [data,setData] = useState([])
 
   useEffect(() => {
     fetchData()
-    inputRef.current.focus()
+
     return () => {
-      enclosure_columns = []
+      precint_columns = []
     }
+
   },[])
 
   useMemo(() => {
-    enclosure_columns = [
+    precint_columns = [{
 
-          {
-            Header: 'Código',
-            accessor: 'id'
-          },
-          {
-            Header: 'Nombre',
-            accessor: 'name'
-          },
-          {
-            Header: 'Estado',
-            accessor: props1 => [props1.state ? 'Activo' : 'Inactivo']
-          },
-          {
-            Header: 'Acciones',
-            Cell: props1 => {
-              const id = props1.cell.row.original.id
-              return(
-                <DropdownButton id={'drop'+id} title="Seleccione"  block="true">
-                  <Dropdown.Item onClick={() => modifyRegister(props1.cell.row.original)}>Modificar</Dropdown.Item>
-                  <Dropdown.Item onClick={() => deleteRegister(id)}>Eliminar</Dropdown.Item>
-                </DropdownButton>
-              )
-            }
+          Header : 'Codigo',
+          accessor: 'code',
+          Cell: props1 => {
+            return (
+              <Button variant="link" onClick={() => {modifyRegister(props1.cell.row.original)}}>{props1.cell.row.original.code}</Button>
+            )
           }
+        },
+        {
+          Header : 'Nombre',
+          accessor: 'name',
+        },
+        {
+          Header : 'Marca',
+          accessor: props1 => [props1.brands.name]
+        },
+        {
+          Header : 'Modelo',
+          accessor: props1 => props1.models ?  [props1.models.name] : []
+        },
+        {
+          Header : 'Categoria',
+          accessor: props1 => [props1.families.name]
+        },
+        {
+          Header : 'Uni.Medida',
+          accessor: props1 => [props1.units.name]
+        },
+        {
+          Header : 'Activo',
+          accessor: props1 => props1.state ? ['Si'] : ['No']
+        },
+        {
+          Header: 'Acciones',
+          Cell : props1 => {
+            const id = props1.cell.row.original.id
+            return(
+              <DropdownButton id={'drop'+id} title="Seleccione"  block="true" size="sm">
+                <Dropdown.Item onClick={() => modifyRegister(props1.cell.row.original)}>Modificar</Dropdown.Item>
+                <Dropdown.Item onClick={() => deleteRegister(id)}>Eliminar</Dropdown.Item>
+              </DropdownButton>
+            )
+          }
+        }
       ]
   },[])
-
-  const clearForm = () => {
-    setEnclosureForm({
-      name: '',
-      state : true
-    })
-  }
 
   const confirmDeleteRegister = id => {
     axios.delete(API_URL+'master_enclosure/'+id).then(result => {
@@ -110,10 +118,9 @@ const EnclosurePage = (props) => {
     });
   }
 
-
   const fetchData = () => {
     axios.get(API_URL+'master_enclosure').then(result => {
-      setEnclosures(result.data)
+      setData(result.data)
     }).catch(err => {
       if(err.response){
         toast.error(err.response.data.message)
@@ -123,128 +130,35 @@ const EnclosurePage = (props) => {
     })
   }
 
-  const modifyRegister = data => {
-    setEnclosureForm({
-      name: data.name,
-      id: data.id,
-      state: data.state
-    })
-    inputRef.current.focus()
+  const goToForm = () => {
+    props.history.replace('/masters/enclosure/form')
   }
 
-  const onChange = e => {
-    if(e.target.name === "state"){
-      let val = e.target.value === "false"  ? false : true
-      setEnclosureForm({...enclosureForm, [e.target.name] : val})
-    }else{
-      setEnclosureForm({...enclosureForm, [e.target.name] : e.target.value})
-    }
-  }
-
-  const onSubmit = e => {
-
-    const form = e.currentTarget;
-    e.preventDefault();
-    if (form.checkValidity() === false) {
-      e.stopPropagation();
-      setValidated(true);
-      return
-    }
-
-    let objectPost = Object.assign({},enclosureForm)
-    if(objectPost.id){
-      axios.put(API_URL+'master_enclosure/'+objectPost.id,objectPost).then(result => {
-        toast.success('Registro Modificado')
-        fetchData()
-        clearForm()
-      }).catch(err => {
-        if(err.response){
-          toast.error(err.response.data.message)
-        }else{
-          toast.error('Error, contacte con soporte')
-        }
-      })
-    }else{
-      axios.post(API_URL+'master_enclosure',objectPost).then(result => {
-        toast.success('Registro Creado')
-        fetchData()
-        clearForm()
-      }).catch(err => {
-        if(err.response){
-          toast.error(err.response.data.message)
-        }else{
-          toast.error('Error, contacte con soporte')
-        }
-      })
-    }
+  const modifyRegister = datos => {
+    props.history.replace('/masters/enclosure/form/'+datos.id)
   }
 
   return (
-    <Container>
+    <Container fluid>
       <Row className="containerDiv">
         <Col sm={12} md={12} lg={12} xs={12} className="">
-          <h4 className="title_principal">Recintos</h4>
+          <h4 className="title_principal">Materiales</h4>
           <hr/>
         </Col>
-        <Col sm={12} md={12} lg={12} xs={12} className="text-right">
-          <span className="text-danger">*Campos Obligatorios</span>
-          <br/><br/>
+        <Col sm={12} md={12} lg={12}>
+          <Row className="justify-content-center">
+            <Col sm={4} md={4} lg={4}>
+              <Button variant="secondary" size="sm" block={true} onClick={goToForm}>Crear Materiales <FaPlusCircle/></Button>
+            </Col>
+          </Row>
         </Col>
-        <Col sm={12} md={12} lg={12} xs={12}>
-          <Form onSubmit={onSubmit} noValidate validated={validated}>
-            <Row>
-              <InputFieldRef
-                ref={inputRef}
-                {...props.inputName}
-                value={enclosureForm.name}
-                handleChange={onChange}
-              />
-              <Col sm={6} md={6} lg={6}>
-                <label className="form-control-label">Estado</label>
-                <Row>
-                  <Col sm={3} md={3} lg={3}>
-                    <label>
-                      <input type="checkbox" name="state" onChange={onChange} value={true} checked={enclosureForm.state  ? true : false} />
-                      &nbsp;&nbsp;Activo
-                    </label>
-                  </Col>
-                  <Col sm={4} md={4} lg={4}>
-                    <label>
-                      <input type="checkbox" name="state" onChange={onChange} value={false} checked={enclosureForm.state ? false : true} />
-                      &nbsp;&nbsp;Inactivo
-                    </label>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row className="justify-content-center">
-              <Col sm={6} md={6} lg={6}>
-                <br/>
-                <Button type="submit" variant="primary" block={true}>Guardar Datos</Button>
-              </Col>
-            </Row>
-          </Form>
-        </Col>
-        <Col sm={12} md={12} lg={12} xs={12}>
-          <br/><br/>
-          <Table data={enclosures} columns={enclosure_columns} />
+        <Col sm={12} md={12} lg={12}>
+          <br/>
+          <Table data={data} columns={precint_columns} />
         </Col>
       </Row>
     </Container>
   )
-}
-
-EnclosurePage.defaultProps = {
-  inputName: {
-    type: 'text',
-    required: true,
-    name: 'name',
-    label : 'Recinto',
-    messageErrors: [
-      'Requerido*'
-    ],
-    cols:"col-sm-6 col-md-6 col-lg-6 col-xs-6"
-  },
 }
 
 export default EnclosurePage

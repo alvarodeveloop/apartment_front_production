@@ -430,7 +430,7 @@ const AreaRequestFormPage = (props) => {
   }
 
   const goToTable = () => {
-    props.history.replace('/request/property/managment')
+    props.history.replace('/request/area/managment')
   }
 
   return (

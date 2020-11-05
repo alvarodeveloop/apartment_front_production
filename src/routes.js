@@ -91,11 +91,11 @@ export const routes = [
     component: lazy(() => import('./pages/params/RelatedFailuresPage'))
   },
   {
-    path: '/masters/precint/form/:id?',
-    component: lazy(() => import('./pages/masters/PrecintFormPage'))
+    path: '/masters/enclosure/form/:id?',
+    component: lazy(() => import('./pages/masters/EnclosureFormPage'))
   },{
     path: '/masters/precint',
-    component: lazy(() => import('./pages/masters/EnclosurePage'))
+    component: lazy(() => import('./pages/masters/PrecintPage'))
   },
   {
     path: '/request/planning',
@@ -200,7 +200,7 @@ export const routes = [
   },
   {
     path: '/masters/enclosure',
-    component: lazy(() => import('./pages/masters/PrecintPage'))
+    component: lazy(() => import('./pages/masters/EnclosurePage'))
   },
   {
     path: '/dashboard',

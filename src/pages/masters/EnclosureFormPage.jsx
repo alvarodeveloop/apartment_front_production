@@ -13,7 +13,7 @@ import axios from 'axios'
 import { API_URL } from 'utils/constants'
 import { toast } from 'react-toastify';
 
-const PrecintFormPage = (props) => {
+const EnclosureFormPage = (props) => {
 
   const [validated, setValidated] = useState(false)
   const [families, setFamilies] = useState([])
@@ -47,7 +47,7 @@ const PrecintFormPage = (props) => {
 
     if(props.match.params.id){
       promises.push(
-        axios.get(API_URL+'master_precint/'+props.match.params.id)
+        axios.get(API_URL+'master_enclosure/'+props.match.params.id)
       )
     }
 
@@ -98,7 +98,7 @@ const PrecintFormPage = (props) => {
     let objectPost = Object.assign({},data)
 
     if(objectPost.id){
-      axios.put(API_URL+'master_precint/'+objectPost.id,objectPost).then(result => {
+      axios.put(API_URL+'master_enclosure/'+objectPost.id,objectPost).then(result => {
         toast.success('Registro Modificado')
         gotBackToTable()
       }).catch(err => {
@@ -109,7 +109,7 @@ const PrecintFormPage = (props) => {
         }
       })
     }else{
-      axios.post(API_URL+'master_precint',objectPost).then(result => {
+      axios.post(API_URL+'master_enclosure',objectPost).then(result => {
         toast.success('Registro Creado')
         clearForm()
       }).catch(err => {
@@ -227,7 +227,7 @@ const PrecintFormPage = (props) => {
   )
 }
 
-PrecintFormPage.defaultProps = {
+EnclosureFormPage.defaultProps = {
   inputCode: {
     type: 'text',
     required: true,
@@ -300,4 +300,4 @@ PrecintFormPage.defaultProps = {
   },
 }
 
-export default PrecintFormPage
+export default EnclosureFormPage

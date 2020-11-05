@@ -239,7 +239,7 @@ FamilyPage.defaultProps = {
     type: 'text',
     required: true,
     name: 'name',
-    label : 'familia',
+    label : 'Categoria',
     messageErrors: [
       'Requerido*'
     ],

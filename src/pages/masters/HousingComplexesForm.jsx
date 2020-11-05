@@ -102,6 +102,11 @@ const HousingComplexesForm = (props) => {
   const onChange = e => {
     if(e.target.name === "block_mza" || e.target.name === "manager_email" || e.target.name === "admin_email" || e.target.name === "dir_email" || e.target.name === "other_email" || e.target.name === "hard_data" || e.target.name === "hard_data_information_limit_date" || e.target.name.indexOf('totales_año') !== -1){
       setForm1({...form1, [e.target.name] : e.target.checked})
+    }else if(e.target.name === "rut_administration_client"){
+      let val = e.target.value
+      val = val.replace(/-/g,'')
+      val = val.length > 0 ? val.substring(0, val.length - 1)+'-'+val.substring(val.length - 1) : ''
+      setForm1({...form1, [e.target.name] : val})
     }else{
       setForm1({...form1, [e.target.name] : e.target.value})
     }
@@ -199,7 +204,7 @@ const HousingComplexesForm = (props) => {
     let promises = [
       axios.get(API_URL+'master_cities'),
       axios.get(API_URL+'enterprise'),
-      axios.get(API_URL+'master_enclosure'),
+      axios.get(API_URL+'master_precint'),
       axios.get(API_URL+'master_config_file'),
       axios.get(API_URL+'params_model_property'),
     ]
@@ -1047,7 +1052,7 @@ HousingComplexesForm.defaultProps = {
     cols:"col-sm-3 col-md-3 col-lg-3 col-xs-3"
   },
   inputRutAdministrationClient: {
-    type: 'number',
+    type: 'text',
     required: false,
     name: 'rut_administration_client',
     label : 'RUT de cliente administración:',

@@ -419,7 +419,15 @@ const AreaFormSolicitudePage = (props) => {
       FileSaver.saveAs(result.data,'orden_post_venta_area.pdf')
     }).catch(err => {
       if(err.response){
-        toast.error(err.response.data.message)
+        let reader = new FileReader()
+        reader.addEventListener('loadend', (e) => {
+          const text = e.srcElement.result;
+          toast.error(text)
+          console.log(text);
+        });
+        // Start reading the blob as text.
+        reader.readAsText(err.response.data);
+
       }else{
         toast.error('Error, contacte con soporte')
       }
