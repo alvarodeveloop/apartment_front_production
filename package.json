@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@loadable/component": "~5.12.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "~4.4.1",
     "chart.js": "~2.9.3",
     "classlist.js": "~1.1.20150312",
